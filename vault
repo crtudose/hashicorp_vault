@@ -198,3 +198,26 @@ HA Enabled      false
 
 C:\Windows\System32>vault status
 Error checking seal status: Get "http://127.0.0.1:8200/v1/sys/seal-status": dial tcp 127.0.0.1:8200: connectex: No connection could be made because the target machine actively refused it.
+
+==============================================
+Lab1
+-------------------
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo groupadd vault
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ cat /etc/passwd
+...
+vaultuser:x:1000:1000::/home/vaultuser:/bin/bash
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ cat /etc/group 
+...
+vaultuser:x:1000:
+vault:x:1001:
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo useradd -r -m -g vault -d /home/vault -s /bin/bash -c "Vault user" vault
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ cat /etc/passwd
+...
+vault:x:999:1001:Vault user:/home/vault:/bin/bash
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo mkdir -p /opt/vault/data
+sudo mkdir -p /etc/vault.d
+sudo mkdir -p /var/lib/vault
+sudo mkdir -p /usr/local/bin
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo chown -R vault:vault /opt/vault
+sudo chown -R vault:vault /etc/vault.d
+sudo chown -R vault:vault /var/lib/vault
