@@ -149,3 +149,16 @@ cubbyhole/    cubbyhole    cubbyhole_befc8ad6    per-token private secret storag
 identity/     identity     identity_790eeab1     identity store
 secret/       kv           kv_d615b4cf           key/value secret storage
 sys/          system       system_e3600a22       system endpoints used for control, policy and debugging
+
+C:\Windows\System32>vault kv put secret/vaultcourse/ctudose ctudose=ctudose
+========= Secret Path =========
+secret/data/vaultcourse/ctudose
+
+======= Metadata =======
+Key                Value
+---                -----
+created_time       2025-03-22T11:01:27.8994103Z
+custom_metadata    <nil>
+deletion_time      n/a
+destroyed          false
+version            1
