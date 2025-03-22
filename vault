@@ -180,3 +180,18 @@ version            1
 Key        Value
 ---        -----
 ctudose    ctudose
+
+C:\Windows\System32>vault status
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    1
+Threshold       1
+Version         1.19.0
+Build Date      2025-03-04T12:36:40Z
+Storage Type    inmem
+Cluster Name    vault-cluster-04d7de93
+Cluster ID      e3aff4c5-168b-6284-23bd-adf74d714157
+HA Enabled      false
