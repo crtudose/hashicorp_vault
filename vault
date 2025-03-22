@@ -200,7 +200,7 @@ C:\Windows\System32>vault status
 Error checking seal status: Get "http://127.0.0.1:8200/v1/sys/seal-status": dial tcp 127.0.0.1:8200: connectex: No connection could be made because the target machine actively refused it.
 
 ==============================================
-Lab1
+Lab1 - HashiCorp Vault Installation Lab
 -------------------
 vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo groupadd vault
 vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ cat /etc/passwd
@@ -221,3 +221,117 @@ sudo mkdir -p /usr/local/bin
 vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo chown -R vault:vault /opt/vault
 sudo chown -R vault:vault /etc/vault.d
 sudo chown -R vault:vault /var/lib/vault
+
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ wget https://releases.hashicorp.com/vault/1.18.3/vault_1.18.3_linux_amd64.zip
+--2025-03-22 12:04:14--  https://releases.hashicorp.com/vault/1.18.3/vault_1.18.3_linux_amd64.zip
+Resolving releases.hashicorp.com (releases.hashicorp.com)... 18.239.36.8, 18.239.36.56, 18.239.36.17, ...
+Connecting to releases.hashicorp.com (releases.hashicorp.com)|18.239.36.8|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 160945151 (153M) [application/zip]
+Saving to: 'vault_1.18.3_linux_amd64.zip'
+
+vault_1.18.3_linux_amd 100%[============================>] 153.49M   228MB/s    in 0.7s    
+
+2025-03-22 12:04:15 (228 MB/s) - 'vault_1.18.3_linux_amd64.zip' saved [160945151/160945151]
+
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo unzip vault_1.18.3_linux_amd64.zip -d /usr/local/bin/
+Archive:  vault_1.18.3_linux_amd64.zip
+  inflating: /usr/local/bin/vault    
+  inflating: /usr/local/bin/LICENSE.txt  
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo chown vault:vault /usr/local/bin/vault
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ rm vault_1.18.3_linux_amd64.zip
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ vault --version
+Vault v1.18.3 (7ae4eca5403bf574f142cd8f987b8d83bafcd1de), built 2024-12-16T14:00:53Z
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo tee /etc/vault.d/vault.hcl <<EOF
+storage "file" {
+  path = "/opt/vault/data"
+}
+
+listener "tcp" {
+  address     = "0.0.0.0:8200"
+  tls_disable = 1  # Only for dev/test
+}
+
+api_addr = "http://127.0.0.1:8200"
+cluster_addr = "http://127.0.0.1:8201"
+
+ui = true
+disable_mlock = true  # Only for dev/test
+EOF
+storage "file" {
+  path = "/opt/vault/data"
+}
+
+listener "tcp" {
+  address     = "0.0.0.0:8200"
+  tls_disable = 1  # Only for dev/test
+}
+
+api_addr = "http://127.0.0.1:8200"
+cluster_addr = "http://127.0.0.1:8201"
+
+ui = true
+disable_mlock = true  # Only for dev/test
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo chmod 640 /etc/vault.d/vault.hcl
+sudo chown -R vault:vault /etc/vault.d/vault.hcl
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ sudo -u vault /usr/local/bin/vault server -config=/etc/vault.d/vault.hcl &
+[1] 4321
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ ==> Vault server configuration:
+
+Administrative Namespace: 
+             Api Address: http://127.0.0.1:8200
+                     Cgo: disabled
+         Cluster Address: https://127.0.0.1:8201
+   Environment Variables: CODESPACES, COLORTERM, ContainerVersion, DEBIAN_FRONTEND, HOME, HOSTNAME, LANG, LOGNAME, LS_COLORS, MAIL, PATH, RepositoryName, SHELL, SUDO_COMMAND, SUDO_GID, SUDO_UID, SUDO_USER, TERM, USER
+              Go Version: go1.23.3
+              Listener 1: tcp (addr: "0.0.0.0:8200", cluster address: "0.0.0.0:8201", disable_request_limiter: "false", max_request_duration: "1m30s", max_request_size: "33554432", tls: "disabled")
+               Log Level: 
+                   Mlock: supported: true, enabled: false
+           Recovery Mode: false
+                 Storage: file
+                 Version: Vault v1.18.3, built 2024-12-16T14:00:53Z
+             Version Sha: 7ae4eca5403bf574f142cd8f987b8d83bafcd1de
+
+==> Vault server started! Log data will stream in below:
+
+2025-03-22T12:05:27.539Z [INFO]  proxy environment: http_proxy="" https_proxy="" no_proxy=""
+2025-03-22T12:05:27.539Z [INFO]  incrementing seal generation: generation=1
+2025-03-22T12:05:27.539Z [INFO]  core: Initializing version history cache for core
+2025-03-22T12:05:27.539Z [INFO]  events: Starting event system
+
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ export VAULT_ADDR='http://127.0.0.1:8200'
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ curl http://127.0.0.1:8200/v1/sys/health | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     02025-03-22T12:05:59.125Z [INFO]  core: security barrier not initialized
+100   296  100   296    0     0  98436      0 --:--:-- --:--:-- --:--:--  144k
+{
+  "initialized": false,
+  "sealed": true,
+  "standby": true,
+  "performance_standby": false,
+  "replication_performance_mode": "unknown",
+  "replication_dr_mode": "unknown",
+  "server_time_utc": 1742645159,
+  "version": "1.18.3",
+  "enterprise": false,
+  "echo_duration_ms": 0,
+  "clock_skew_ms": 0,
+  "replication_primary_canary_age_ms": 0
+}
+vaultuser@codespaces-067f5f:/workspaces/vault-codespaces$ vault status
+2025-03-22T12:06:06.867Z [INFO]  core: security barrier not initialized
+2025-03-22T12:06:06.867Z [INFO]  core: seal configuration missing, not initialized
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        false
+Sealed             true
+Total Shares       0
+Threshold          0
+Unseal Progress    0/0
+Unseal Nonce       n/a
+Version            1.18.3
+Build Date         2024-12-16T14:00:53Z
+Storage Type       file
+HA Enabled         false
