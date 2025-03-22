@@ -162,3 +162,21 @@ custom_metadata    <nil>
 deletion_time      n/a
 destroyed          false
 version            1
+
+C:\Windows\System32>vault kv get secret/vaultcourse/ctudose
+========= Secret Path =========
+secret/data/vaultcourse/ctudose
+
+======= Metadata =======
+Key                Value
+---                -----
+created_time       2025-03-22T11:01:27.8994103Z
+custom_metadata    <nil>
+deletion_time      n/a
+destroyed          false
+version            1
+
+===== Data =====
+Key        Value
+---        -----
+ctudose    ctudose
