@@ -195,3 +195,6 @@ Storage Type    inmem
 Cluster Name    vault-cluster-04d7de93
 Cluster ID      e3aff4c5-168b-6284-23bd-adf74d714157
 HA Enabled      false
+
+C:\Windows\System32>vault status
+Error checking seal status: Get "http://127.0.0.1:8200/v1/sys/seal-status": dial tcp 127.0.0.1:8200: connectex: No connection could be made because the target machine actively refused it.
