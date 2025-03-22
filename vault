@@ -141,3 +141,11 @@ Storage Type    inmem
 Cluster Name    vault-cluster-04d7de93
 Cluster ID      e3aff4c5-168b-6284-23bd-adf74d714157
 HA Enabled      false
+
+C:\Windows\System32>vault secrets list
+Path          Type         Accessor              Description
+----          ----         --------              -----------
+cubbyhole/    cubbyhole    cubbyhole_befc8ad6    per-token private secret storage
+identity/     identity     identity_790eeab1     identity store
+secret/       kv           kv_d615b4cf           key/value secret storage
+sys/          system       system_e3600a22       system endpoints used for control, policy and debugging
