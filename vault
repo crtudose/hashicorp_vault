@@ -381,5 +381,36 @@ KillMode=process
 KillSignal=SIGINT
 
 [Install]
+
+root@ctudose:/etc/vault.d# journalctl -u vault
+Mar 24 14:57:55 ctudose systemd[1]: Stopping vault.service - HashiCorp Vault...
+Mar 24 14:57:55 ctudose vault[4088]: ==> Vault shutdown triggered
+Mar 24 14:57:55 ctudose systemd[1]: vault.service: Deactivated successfully.
+Mar 24 14:57:55 ctudose systemd[1]: Stopped vault.service - HashiCorp Vault.
+Mar 24 14:57:55 ctudose systemd[1]: Started vault.service - HashiCorp Vault.
+Mar 24 14:57:55 ctudose vault[4571]: ==> Vault server configuration:
+Mar 24 14:57:55 ctudose vault[4571]: Administrative Namespace:
+Mar 24 14:57:55 ctudose vault[4571]:              Api Address: http://127.0.0.1:8200
+Mar 24 14:57:55 ctudose vault[4571]:                      Cgo: disabled
+Mar 24 14:57:55 ctudose vault[4571]:          Cluster Address: https://127.0.0.1:8201
+Mar 24 14:57:55 ctudose vault[4571]:    Environment Variables: GOTRACEBACK, HOME, INVOCATION_ID, JOURNAL_STREAM, LANG, LOGNAME, MEMORY_PRESSU>
+Mar 24 14:57:55 ctudose vault[4571]:               Go Version: go1.23.3
+Mar 24 14:57:55 ctudose vault[4571]:               Listener 1: tcp (addr: "0.0.0.0:8200", cluster address: "0.0.0.0:8201", disable_request_li>
+Mar 24 14:57:55 ctudose vault[4571]:                Log Level:
+Mar 24 14:57:55 ctudose vault[4571]:                    Mlock: supported: true, enabled: false
+Mar 24 14:57:55 ctudose vault[4571]:            Recovery Mode: false
+Mar 24 14:57:55 ctudose vault[4571]:                  Storage: file
+Mar 24 14:57:55 ctudose vault[4571]:                  Version: Vault v1.18.3, built 2024-12-16T14:00:53Z
+Mar 24 14:57:55 ctudose vault[4571]:              Version Sha: 7ae4eca5403bf574f142cd8f987b8d83bafcd1de
+Mar 24 14:57:55 ctudose vault[4571]: ==> Vault server started! Log data will stream in below:
+Mar 24 14:57:55 ctudose vault[4571]: 2025-03-24T14:57:55.470Z [INFO]  proxy environment: http_proxy="" https_proxy="" no_proxy=""
+Mar 24 14:57:55 ctudose vault[4571]: 2025-03-24T14:57:55.470Z [INFO]  incrementing seal generation: generation=1
+Mar 24 14:57:55 ctudose vault[4571]: 2025-03-24T14:57:55.471Z [INFO]  core: Initializing version history cache for core
+Mar 24 14:57:55 ctudose vault[4571]: 2025-03-24T14:57:55.471Z [INFO]  events: Starting event system
+
 WantedBy=multi-user.target
 EOF
+
+=======================================
+lab2 - Introduction to Vault CLI Commands Lab
+-----------------------------------
