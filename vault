@@ -335,3 +335,26 @@ Version            1.18.3
 Build Date         2024-12-16T14:00:53Z
 Storage Type       file
 HA Enabled         false
+
+root@ctudose:/etc/vault.d# sudo systemctl status vault
+● vault.service - HashiCorp Vault
+     Loaded: loaded (/etc/systemd/system/vault.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2025-03-24 14:48:58 UTC; 1min 49s ago
+   Main PID: 4088 (vault)
+      Tasks: 7 (limit: 4552)
+     Memory: 167.1M (peak: 167.6M)
+        CPU: 573ms
+     CGroup: /system.slice/vault.service
+             └─4088 /usr/local/bin/vault server -config=/etc/vault.d/vault.hcl
+
+Mar 24 14:48:59 ctudose vault[4088]:                  Storage: file
+Mar 24 14:48:59 ctudose vault[4088]:                  Version: Vault v1.18.3, built 2024-12-16T14:00:53Z
+Mar 24 14:48:59 ctudose vault[4088]:              Version Sha: 7ae4eca5403bf574f142cd8f987b8d83bafcd1de
+Mar 24 14:48:59 ctudose vault[4088]: ==> Vault server started! Log data will stream in below:
+Mar 24 14:48:59 ctudose vault[4088]: 2025-03-24T14:48:59.102Z [INFO]  proxy environment: http_proxy="" https_proxy="" no_proxy=""
+Mar 24 14:48:59 ctudose vault[4088]: 2025-03-24T14:48:59.103Z [INFO]  incrementing seal generation: generation=1
+Mar 24 14:48:59 ctudose vault[4088]: 2025-03-24T14:48:59.107Z [INFO]  core: Initializing version history cache for core
+Mar 24 14:48:59 ctudose vault[4088]: 2025-03-24T14:48:59.107Z [INFO]  events: Starting event system
+Mar 24 14:50:22 ctudose vault[4088]: 2025-03-24T14:50:22.648Z [INFO]  core: security barrier not initialized
+Mar 24 14:50:22 ctudose vault[4088]: 2025-03-24T14:50:22.648Z [INFO]  core: seal configuration missing, not initialized
+
