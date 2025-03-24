@@ -455,3 +455,45 @@ Version            1.18.3
 Build Date         2024-12-16T14:00:53Z
 Storage Type       file
 HA Enabled         false
+
+root@ctudose:~# vault login h
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                h
+token_accessor       YxK4nBjlPeUqblADlF25cd6V
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+
+root@ctudose:~# vault secrets list
+Path          Type         Accessor              Description
+----          ----         --------              -----------
+cubbyhole/    cubbyhole    cubbyhole_faaca29b    per-token private secret storage
+identity/     identity     identity_42e59d53     identity store
+sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
+
+root@ctudose:~# vault secrets list -detailed
+Path          Plugin       Accessor              Default TTL    Max TTL    Force No Cache    Replication    Seal Wrap    External Entropy Access    Options    Description                                                UUID                                    Version    Running Version          Running SHA256    Deprecation Status
+----          ------       --------              -----------    -------    --------------    -----------    ---------    -----------------------    -------    -----------                                                ----                                    -------    ---------------          --------------    ------------------
+cubbyhole/    cubbyhole    cubbyhole_faaca29b    n/a            n/a        false             local          false        false                      map[]      per-token private secret storage                           c0a14178-74d4-959d-a0e2-06375d362ba9    n/a        v1.18.3+builtin.vault    n/a               n/a
+identity/     identity     identity_42e59d53     system         system     false             replicated     false        false                      map[]      identity store                                             ca1f8761-c22c-7685-e0ea-7a25ce78ea58    n/a        v1.18.3+builtin.vault    n/a               n/a
+sys/          system       system_6d4bcaaa       n/a            n/a        false             replicated     true         false                      map[]      system endpoints used for control, policy and debugging    b3084dbb-9d9b-3925-1bee-6f01f2125920    n/a        v1.18.3+builtin.vault    n/a               n/a
+
+root@ctudose:~# vault auth list
+Path      Type     Accessor               Description                Version
+----      ----     --------               -----------                -------
+token/    token    auth_token_9c496121    token based credentials    n/a
+
+root@ctudose:~# vault auth list -detailed
+Path      Plugin    Accessor               Default TTL    Max TTL    Token Type         Replication    Seal Wrap    External Entropy Access    Options    Description                UUID                                    Version    Running Version          Running SHA256    Deprecation Status
+----      ------    --------               -----------    -------    ----------         -----------    ---------    -----------------------    -------    -----------                ----                                    -------    ---------------          --------------    ------------------
+token/    token     auth_token_9c496121    system         system     default-service    replicated     false        false                      map[]      token based credentials    71a6d904-bd0a-69ec-b3a3-baca996abf8e    n/a        v1.18.3+builtin.vault    n/a               n/a
+
+
+
