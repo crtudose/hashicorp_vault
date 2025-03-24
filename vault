@@ -497,6 +497,7 @@ token/    token     auth_token_9c496121    system         system     default-ser
 
 root@ctudose:~# vault secrets enable -path=secret kv
 Success! Enabled the kv secrets engine at: secret/
+
 root@ctudose:~# vault secrets list
 Path          Type         Accessor              Description
 ----          ----         --------              -----------
@@ -507,6 +508,7 @@ sys/          system       system_6d4bcaaa       system endpoints used for contr
 
 root@ctudose:~# vault policy write secret-policy /etc/vault.d/secret-policy.hcl
 Success! Uploaded policy: secret-policy
+
 root@ctudose:~# vault token create -policy=secret-policy
 Key                  Value
 ---                  -----
@@ -517,6 +519,70 @@ token_renewable      true
 token_policies       ["default" "secret-policy"]
 identity_policies    []
 policies             ["default" "secret-policy"]
+
 root@ctudose:~# vault kv put secret/first hello=world
 Success! Data written to: secret/first
 
+root@ctudose:~# vault kv put secret/my-secret username=admin password=secret123
+Success! Data written to: secret/my-secret
+
+root@ctudose:~# vault kv get secret/first
+==== Data ====
+Key      Value
+---      -----
+hello    world
+
+root@ctudose:~# vault kv get -field=hello secret/first
+world
+
+root@ctudose:~# vault kv list secret/
+Keys
+----
+first
+my-secret
+
+root@ctudose:~# vault token lookup
+Key                 Value
+---                 -----
+accessor            YxK4nBjlPeUqblADlF25cd6V
+creation_time       1742831853
+creation_ttl        0s
+display_name        root
+entity_id           n/a
+expire_time         <nil>
+explicit_max_ttl    0s
+id                  h
+meta                <nil>
+num_uses            0
+orphan              true
+path                auth/token/root
+policies            [root]
+ttl                 0s
+type                service
+root@ctudose:~# vault token capabilities secret/first
+root
+
+root@ctudose:~# vault token capabilities secret/first
+root
+
+root@ctudose:~# vault token create -ttl=1h
+Key                  Value
+---                  -----
+token                h
+token_accessor       CrUgNzTc0etisMraPvruMc59
+token_duration       1h
+token_renewable      true
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+
+root@ctudose:~# vault kv put secret/user - <<EOF
+{
+  "data": {
+    "username": "admin",
+    "password": "secret",
+    "email": "admin@example.com"
+  }
+}
+EOF
+Success! Data written to: secret/user
