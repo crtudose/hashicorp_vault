@@ -414,3 +414,44 @@ EOF
 =======================================
 lab2 - Introduction to Vault CLI Commands Lab
 -----------------------------------
+root@ctudose:~# vault operator init
+Unseal Key 1: R
+Unseal Key 2: Y
+Unseal Key 3: u
+Unseal Key 4: A
+Unseal Key 5: k
+
+Initial Root Token: h
+
+Vault initialized with 5 key shares and a key threshold of 3. Please securely
+distribute the key shares printed above. When the Vault is re-sealed,
+restarted, or stopped, you must supply at least 3 of these keys to unseal it
+before it can start servicing requests.
+
+Vault does not store the generated root key. Without at least 3 keys to
+reconstruct the root key, Vault will remain permanently sealed!
+
+It is possible to generate new unseal keys, provided you have a quorum of
+existing unseal keys shares. See "vault operator rekey" for more information.
+root@ctudose:~# vault login root
+Error authenticating: error looking up token: Error making API request.
+
+URL: GET http://127.0.0.1:8200/v1/auth/token/lookup-self
+Code: 503. Errors:
+
+* Vault is sealed
+root@ctudose:~# vault operator unseal
+Unseal Key (will be hidden):
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    1/3
+Unseal Nonce       ac4517c5-3220-b008-191e-e5910b1535d8
+Version            1.18.3
+Build Date         2024-12-16T14:00:53Z
+Storage Type       file
+HA Enabled         false
