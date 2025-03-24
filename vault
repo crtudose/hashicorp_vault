@@ -336,6 +336,10 @@ Build Date         2024-12-16T14:00:53Z
 Storage Type       file
 HA Enabled         false
 
+=================================================
+Ubuntu VM
+--------------
+
 root@ctudose:/etc/vault.d# sudo systemctl status vault
 ● vault.service - HashiCorp Vault
      Loaded: loaded (/etc/systemd/system/vault.service; enabled; preset: enabled)
@@ -358,3 +362,24 @@ Mar 24 14:48:59 ctudose vault[4088]: 2025-03-24T14:48:59.107Z [INFO]  events: St
 Mar 24 14:50:22 ctudose vault[4088]: 2025-03-24T14:50:22.648Z [INFO]  core: security barrier not initialized
 Mar 24 14:50:22 ctudose vault[4088]: 2025-03-24T14:50:22.648Z [INFO]  core: seal configuration missing, not initialized
 
+sudo tee /lib/systemd/system/vault.service <<EOF
+[Unit]
+Description="HashiCorp Vault"
+Documentation="https://developer.hashicorp.com/vault/docs"
+ConditionFileNotEmpty="${VAULT_CONFIG}/vault.hcl"
+
+[Service]
+User=vault
+Group=vault
+SecureBits=keep-caps
+AmbientCapabilities=CAP_IPC_LOCK
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+NoNewPrivileges=yes
+ExecStart=${VAULT_BINARY} server -config=${VAULT_CONFIG}/vault.hcl
+ExecReload=/bin/kill --signal HUP
+KillMode=process
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
+EOF
