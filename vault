@@ -505,4 +505,18 @@ identity/     identity     identity_42e59d53     identity store
 secret/       kv           kv_7b18ca03           n/a
 sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
 
+root@ctudose:~# vault policy write secret-policy /etc/vault.d/secret-policy.hcl
+Success! Uploaded policy: secret-policy
+root@ctudose:~# vault token create -policy=secret-policy
+Key                  Value
+---                  -----
+token                h
+token_accessor       9nEnuQVunSvhAulXrt7OTDXs
+token_duration       768h
+token_renewable      true
+token_policies       ["default" "secret-policy"]
+identity_policies    []
+policies             ["default" "secret-policy"]
+root@ctudose:~# vault kv put secret/first hello=world
+Success! Data written to: secret/first
 
