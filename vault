@@ -495,5 +495,14 @@ Path      Plugin    Accessor               Default TTL    Max TTL    Token Type 
 ----      ------    --------               -----------    -------    ----------         -----------    ---------    -----------------------    -------    -----------                ----                                    -------    ---------------          --------------    ------------------
 token/    token     auth_token_9c496121    system         system     default-service    replicated     false        false                      map[]      token based credentials    71a6d904-bd0a-69ec-b3a3-baca996abf8e    n/a        v1.18.3+builtin.vault    n/a               n/a
 
+root@ctudose:~# vault secrets enable -path=secret kv
+Success! Enabled the kv secrets engine at: secret/
+root@ctudose:~# vault secrets list
+Path          Type         Accessor              Description
+----          ----         --------              -----------
+cubbyhole/    cubbyhole    cubbyhole_faaca29b    per-token private secret storage
+identity/     identity     identity_42e59d53     identity store
+secret/       kv           kv_7b18ca03           n/a
+sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
 
 
