@@ -586,3 +586,9 @@ root@ctudose:~# vault kv put secret/user - <<EOF
 }
 EOF
 Success! Data written to: secret/user
+
+https://developer.hashicorp.com/vault/docs/commands
+https://developer.hashicorp.com/vault/docs/secrets/kv
+https://developer.hashicorp.com/vault/tutorials/get-started
+https://github.com/btkrausen/vault-codespaces/blob/main/labs/lab_intro_to_vault.md
+https://github.com/btkrausen/vault-codespaces/blob/main/labs/lab_install_vault_manually.md
