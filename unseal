@@ -126,3 +126,10 @@ $ vault operator init >>> we get recovery keys instead of seal keys and $ vault 
 $ vault secrets list
 $ vault secrets enable azure
 $ vault secrets list >>> will list azure/ path for azure secret
+
+# unseal with transit auto unseal
+seal "transit" {
+address = " " >>> vault cluster running transit
+token = " " >>> acl token to use if enabled
+disable_renewal = " "
+}
