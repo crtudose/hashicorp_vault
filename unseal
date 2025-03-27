@@ -70,6 +70,6 @@ token                h
 token_accessor       Y
 token_duration       ∞
 token_renewable      false
-token_policies       ["root"]
+token_policies       ["root"]  >>> root token policy which never expires
 identity_policies    []
 policies             ["root"]
