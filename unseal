@@ -58,3 +58,18 @@ Storage Type    file
 Cluster Name    vault-cluster-08459538
 Cluster ID      3b6c2a8b-d20f-0ca8-b53c-ade159be4a6a
 HA Enabled      false
+
+root@ctudose:~# vault login h
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                h
+token_accessor       Y
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
