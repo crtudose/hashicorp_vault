@@ -73,3 +73,11 @@ token_renewable      false
 token_policies       ["root"]  >>> root token policy which never expires
 identity_policies    []
 policies             ["root"]
+
+root@ctudose:~# vault secrets list
+Path          Type         Accessor              Description
+----          ----         --------              -----------
+cubbyhole/    cubbyhole    cubbyhole_faaca29b    per-token private secret storage
+identity/     identity     identity_42e59d53     identity store
+secret/       kv           kv_7b18ca03           n/a
+sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
