@@ -132,4 +132,8 @@ seal "transit" {
 address = " " >>> vault cluster running transit
 token = " " >>> acl token to use if enabled
 disable_renewal = " "
-}
+
+// key config
+key_name = "transit_key_name" # transit key used for encryption/decryption
+mount_path = "transit/" # mount path to the transit secret engine
+namespace = "ns1/" # namespace path to the transit secret engine
