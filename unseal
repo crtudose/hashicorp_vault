@@ -1,1 +1,15 @@
 # unseal with key shards
+root@ctudose:~# vault status
+Key                Value
+---                -----
+Seal Type          shamir   >>> shamir - key shards
+Initialized        true     >>> has been initialized
+Sealed             true     >>> sealed with 3 keys
+Total Shares       5
+Threshold          3
+Unseal Progress    0/3
+Unseal Nonce       n/a
+Version            1.18.3
+Build Date         2024-12-16T14:00:53Z
+Storage Type       file
+HA Enabled         false
