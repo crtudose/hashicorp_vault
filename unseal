@@ -83,29 +83,50 @@ secret/       kv           kv_7b18ca03           n/a
 sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
 
 #auto unseal
- - a basic /etc/vault.d/vault.hcl configuration file for integrating HashiCorp Vault with Azure Key Vault as a storage backend. It also includes settings for the storage listener, API address, cluster address, and cluster name.
-Example vault.hcl:
-storage "azure" {
-  account_name      = "your-azure-storage-account-name"
-  container        = "your-container-name"
-  environment      = "AzurePublicCloud"
-  max_parallel     = 128
+Here's a properly structured `vault.hcl` configuration file for setting up **Azure Key Vault** as a seal mechanism, along with **Storage, Listener, and Cluster settings**.
+
+# Full path: /etc/vault.d/vault.hcl
+
+# Storage Backend Configuration (Example: Integrated Storage using Raft)
+storage "raft" {
+  path    = "/opt/vault/data"
+  node_id = "vault-node-1"
 }
 
+# Listener Configuration (Vault API Address)
 listener "tcp" {
   address       = "0.0.0.0:8200"
-  tls_disable   = 1  # Set to 0 if using TLS, then specify cert and key
+  tls_disable   = 1  # Set to 0 to enable TLS
 }
 
-api_addr = "http://your-vault-server-ip:8200"
-cluster_addr = "http://your-vault-server-ip:8201"
-cluster_name = "your-cluster-name"
+# Cluster Configuration
+cluster_addr = "http://0.0.0.0:8201"
+api_addr     = "http://0.0.0.0:8200"
 
-ui = true
+# Azure Key Vault Seal Configuration
+seal "azurekeyvault" {
+  tenant_id      = "your-azure-tenant-id"
+  client_id      = "your-azure-client-id"
+  client_secret  = "your-azure-client-secret"
+  vault_name     = "your-azure-keyvault-name"
+  key_name       = "your-key-name"
+}
+```
 
-Storage: Configures Azure Key Vault as the backend using Azure Storage Account.
-Listener: Binds Vault to all available interfaces on port 8200, with TLS disabled (enable TLS in production).
-API Address: The address for Vault’s API.
-Cluster Address: The address Vault uses for cluster communication.
-Cluster Name: Defines the cluster’s name.
-UI: Enables the Vault web interface.
+### Explanation:
+- **Storage (Raft)**: Uses **Integrated Storage** (Raft) for Vault instead of an external storage backend.
+- **Listener (API Address)**: Listens on `0.0.0.0:8200` for Vault API requests.
+- **Cluster Configuration**: Sets the **API address** and **cluster communication address**.
+- **Seal Configuration**: Uses **Azure Key Vault** as a seal mechanism for automatic unsealing.
+
+#### 🚀 **Next Steps**
+1. Replace **tenant_id**, **client_id**, **client_secret**, **vault_name**, and **key_name** with your **actual Azure credentials**.
+2. Restart Vault using:
+   ```sh
+   systemctl restart vault
+   ```
+3. Check Vault status:
+   ```sh
+   vault status
+   ```
+
