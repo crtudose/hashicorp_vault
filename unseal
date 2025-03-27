@@ -29,3 +29,32 @@ cluster_addr = "http://127.0.0.1:8201"
 
 ui = true
 disable_mlock = true
+
+root@ctudose:~# vault operator unseal Y
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    2/3
+Unseal Nonce       34b77f2b-dce0-dcb7-55a1-fbd496ca9e1b
+Version            1.18.3
+Build Date         2024-12-16T14:00:53Z
+Storage Type       file
+HA Enabled         false
+root@ctudose:~# vault operator unseal u
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false   <<<<< unseal
+Total Shares    5
+Threshold       3
+Version         1.18.3
+Build Date      2024-12-16T14:00:53Z
+Storage Type    file
+Cluster Name    vault-cluster-08459538
+Cluster ID      3b6c2a8b-d20f-0ca8-b53c-ade159be4a6a
+HA Enabled      false
