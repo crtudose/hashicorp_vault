@@ -123,3 +123,6 @@ $ vi /etc/vault.d/vault.hcl
 $ systemctl restart vault
 $ vault status   >>> we should see Recovery Seal Type
 $ vault operator init >>> we get recovery keys instead of seal keys and $ vault status command output will show us false for seal status as it want to azure 
+$ vault secrets list
+$ vault secrets enable azure
+$ vault secrets list >>> will list azure/ path for azure secret
