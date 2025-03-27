@@ -83,3 +83,29 @@ secret/       kv           kv_7b18ca03           n/a
 sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
 
 #auto unseal
+ - a basic /etc/vault.d/vault.hcl configuration file for integrating HashiCorp Vault with Azure Key Vault as a storage backend. It also includes settings for the storage listener, API address, cluster address, and cluster name.
+Example vault.hcl:
+storage "azure" {
+  account_name      = "your-azure-storage-account-name"
+  container        = "your-container-name"
+  environment      = "AzurePublicCloud"
+  max_parallel     = 128
+}
+
+listener "tcp" {
+  address       = "0.0.0.0:8200"
+  tls_disable   = 1  # Set to 0 if using TLS, then specify cert and key
+}
+
+api_addr = "http://your-vault-server-ip:8200"
+cluster_addr = "http://your-vault-server-ip:8201"
+cluster_name = "your-cluster-name"
+
+ui = true
+
+Storage: Configures Azure Key Vault as the backend using Azure Storage Account.
+Listener: Binds Vault to all available interfaces on port 8200, with TLS disabled (enable TLS in production).
+API Address: The address for Vault’s API.
+Cluster Address: The address Vault uses for cluster communication.
+Cluster Name: Defines the cluster’s name.
+UI: Enables the Vault web interface.
