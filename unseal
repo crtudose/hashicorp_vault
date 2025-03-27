@@ -81,3 +81,5 @@ cubbyhole/    cubbyhole    cubbyhole_faaca29b    per-token private secret storag
 identity/     identity     identity_42e59d53     identity store
 secret/       kv           kv_7b18ca03           n/a
 sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
+
+#auto unseal
