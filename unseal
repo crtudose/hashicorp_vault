@@ -119,14 +119,4 @@ seal "azurekeyvault" {
 - **Cluster Configuration**: Sets the **API address** and **cluster communication address**.
 - **Seal Configuration**: Uses **Azure Key Vault** as a seal mechanism for automatic unsealing.
 
-#### 🚀 **Next Steps**
-1. Replace **tenant_id**, **client_id**, **client_secret**, **vault_name**, and **key_name** with your **actual Azure credentials**.
-2. Restart Vault using:
-   ```sh
-   systemctl restart vault
-   ```
-3. Check Vault status:
-   ```sh
-   vault status
-   ```
 
