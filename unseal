@@ -119,4 +119,7 @@ seal "azurekeyvault" {
 - **Cluster Configuration**: Sets the **API address** and **cluster communication address**.
 - **Seal Configuration**: Uses **Azure Key Vault** as a seal mechanism for automatic unsealing.
 
-
+$ vi /etc/vault.d/vault.hcl
+$ systemctl restart vault
+$ vault status   >>> we should see Recovery Seal Type
+$ vault operator init >>> we get recovery keys instead of seal keys
