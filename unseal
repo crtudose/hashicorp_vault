@@ -173,3 +173,32 @@ URL: POST http://127.0.0.1:8200/v1/sys/mounts/transit
 Code: 400. Errors:
 
 * path is already in use at transit/
+
+root@ctudose:~# vault write -f transit/keys/unseal-key
+Key                       Value
+---                       -----
+allow_plaintext_backup    false
+auto_rotate_period        0s
+deletion_allowed          false
+derived                   false
+exportable                false
+imported_key              false
+keys                      map[1:1743332320]
+latest_version            1
+min_available_version     0
+min_decryption_version    1
+min_encryption_version    0
+name                      unseal-key
+supports_decryption       true
+supports_derivation       true
+supports_encryption       true
+supports_signing          false
+type                      aes256-gcm96
+root@ctudose:~# vault secrets list
+Path          Type         Accessor              Description
+----          ----         --------              -----------
+cubbyhole/    cubbyhole    cubbyhole_faaca29b    per-token private secret storage
+identity/     identity     identity_42e59d53     identity store
+secret/       kv           kv_7b18ca03           n/a
+sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
+transit/      transit      transit_3b097335      n/a
