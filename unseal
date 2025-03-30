@@ -237,3 +237,16 @@ path "transit/decrypt/unseal-key" {
 root@ctudose:/etc/vault.d# vault policy write unseal policy.hcl
 Success! Uploaded policy: unseal
 
+root@ctudose:/etc/vault.d# vault policy list
+default
+secret-policy
+unseal
+root
+root@ctudose:/etc/vault.d# vault policy read unseal
+path "transit/encrypt/unreal-key" {
+  capabilities = [ "update" ]
+}
+
+path "transit/decrypt/unseal-key" {
+  capabilities = [ "update" ]
+}
