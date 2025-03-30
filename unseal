@@ -223,3 +223,17 @@ path "secret/*" {
 root@ctudose:/tmp# sudo find / -name "*.hcl"
 /etc/vault.d/vault.hcl
 /etc/vault.d/secret-policy.hcl
+
+root@ctudose:/etc/vault.d# ls
+policy.hcl  secret-policy.hcl  vault.env  vault.hcl  vault.hcl.dpkg-dist
+root@ctudose:/etc/vault.d# cat policy.hcl
+path "transit/encrypt/unreal-key" {
+  capabilities = [ "update" ]
+}
+
+path "transit/decrypt/unseal-key" {
+  capabilities = [ "update" ]
+}
+root@ctudose:/etc/vault.d# vault policy write unseal policy.hcl
+Success! Uploaded policy: unseal
+
