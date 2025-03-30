@@ -291,3 +291,4 @@ seal "transit" {
 }
 $ systemctl restart vault
 $ vault status #recovery seal type will be "transit"
+# now after initialization the unseal should be done automatically
