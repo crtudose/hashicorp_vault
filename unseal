@@ -156,7 +156,7 @@ sys/          system       system_6d4bcaaa       system endpoints used for contr
 root@ctudose:~# vault operator seal
 Success! Vault is sealed.
 
-x
+# transit auto-unseal for secrets engine | using unseal from cluster2 we can unseal cluster1 using transit feature
 root@ctudose:~# vault secrets list
 Path          Type         Accessor              Description
 ----          ----         --------              -----------
