@@ -210,4 +210,16 @@ Keys
 unseal-key  >> the unseal key which in addition needs a policy and a token that has the policy assigned
 
 # we use the token to give out other cluster permission to access this cluster and then it can use the key to unseal
+root@ctudose:/tmp# vault policy list
+default
+secret-policy
+root
 
+root@ctudose:/tmp# vault policy read secret-policy
+path "secret/*" {
+  capabilities = ["create", "update", "read", "delete", "list"]
+}
+
+root@ctudose:/tmp# sudo find / -name "*.hcl"
+/etc/vault.d/vault.hcl
+/etc/vault.d/secret-policy.hcl
