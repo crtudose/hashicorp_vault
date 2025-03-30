@@ -282,10 +282,12 @@ cluster_addr = "http://127.0.0.1:8201"
 ui = true
 disable_mlock = true
 
-Here we add to the file:
+# Here we add to the file:
 seal "transit" {
  address = "http://10.0.1.209:8200"
  token = "s.w"
  key_name = "unseal-key"
  mount-path = "transit"
 }
+$ systemctl restart vault
+$ vault status #recovery seal type will be "transit"
