@@ -157,6 +157,7 @@ root@ctudose:~# vault operator seal
 Success! Vault is sealed.
 
 # transit auto-unseal for secrets engine | using unseal from cluster2 we can unseal cluster1 using transit feature
+# we need to create a key which will be used by other cluster in order to decrypt master key and encryption key
 root@ctudose:~# vault secrets list
 Path          Type         Accessor              Description
 ----          ----         --------              -----------
