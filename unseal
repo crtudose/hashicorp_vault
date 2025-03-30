@@ -155,3 +155,20 @@ secret/       kv           kv_7b18ca03           n/a
 sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
 root@ctudose:~# vault operator seal
 Success! Vault is sealed.
+
+x
+root@ctudose:~# vault secrets list
+Path          Type         Accessor              Description
+----          ----         --------              -----------
+cubbyhole/    cubbyhole    cubbyhole_faaca29b    per-token private secret storage
+identity/     identity     identity_42e59d53     identity store
+secret/       kv           kv_7b18ca03           n/a
+sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
+transit/      transit      transit_3b097335      n/a
+root@ctudose:~# vault secrets enable transit
+Error enabling: Error making API request.
+
+URL: POST http://127.0.0.1:8200/v1/sys/mounts/transit
+Code: 400. Errors:
+
+* path is already in use at transit/
