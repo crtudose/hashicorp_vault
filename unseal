@@ -250,3 +250,14 @@ path "transit/encrypt/unreal-key" {
 path "transit/decrypt/unseal-key" {
   capabilities = [ "update" ]
 }
+
+root@ctudose:/etc/vault.d# vault token create -policy=unseal
+Key                  Value
+---                  -----
+token                h
+token_accessor       mULoBRq5CDAL3HBZ4L3LqIlk
+token_duration       768h
+token_renewable      true
+token_policies       ["default" "unseal"]
+identity_policies    []
+policies             ["default" "unseal"]
