@@ -194,6 +194,7 @@ supports_derivation       true
 supports_encryption       true
 supports_signing          false
 type                      aes256-gcm96
+
 root@ctudose:~# vault secrets list
 Path          Type         Accessor              Description
 ----          ----         --------              -----------
@@ -201,4 +202,12 @@ cubbyhole/    cubbyhole    cubbyhole_faaca29b    per-token private secret storag
 identity/     identity     identity_42e59d53     identity store
 secret/       kv           kv_7b18ca03           n/a
 sys/          system       system_6d4bcaaa       system endpoints used for control, policy and debugging
-transit/      transit      transit_3b097335      n/a
+transit/      transit      transit_3b097335      n/a    >>> new key created
+
+root@ctudose:~# vault list transit/keys
+Keys
+----
+unseal-key  >> the unseal key which in addition needs a policy and a token that has the policy assigned
+
+# we use the token to give out other cluster permission to access this cluster and then it can use the key to unseal
+
