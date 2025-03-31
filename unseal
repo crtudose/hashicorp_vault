@@ -299,3 +299,4 @@ $ vault login s
 $ vault secrets enable azure
 $ vault secrets enable -path=vaultcourse kv
 $ vault kv put vaultcourse/bryan bryan=bryan
+$ vault kv get vaultcourse/bryan 
