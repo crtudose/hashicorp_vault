@@ -292,3 +292,10 @@ seal "transit" {
 $ systemctl restart vault
 $ vault status #recovery seal type will be "transit"
 # now after initialization the unseal should be done automatically
+
+$ vault operator init 
+$ vault status # will show unsealed, initialized
+$ vault login s
+$ vault secrets enable azure
+$ vault secrets enable -path=vaultcourse kv
+$ vault kv put vaultcourse/bryan bryan=bryan
