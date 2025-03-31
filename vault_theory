@@ -1,0 +1,18 @@
+What is vault?
+ - manage secrets and protect sensitive data
+ - provides a single source of secrets for both humans and machines
+ - provides complete lifecycle management for secrets which eliminates secret sprawl, securely stores secrets, provides governance for access to secrets
+What is a secret?
+ - anything your organization deems sensitive such as usernames/passwords, certificates, api keys, certificates, encryption keys
+Deploying the consul storage backend
+ - consul is deployed using multiple nodes and configured as a cluster
+ - clusters are deployed in odd numbers (for voting members)
+ - all data is replicated among all nodes in the cluster
+ - a leader electrion promotes a single consul node as the leader
+ - the leader accepts new logs entries and replicates to all other nodes
+ - consult cluster for vault storage backend should'nt be used for consul functions in a production setting
+Deploying the integrated storage backend
+ - integrated storage (aka Raft) allows vault nods to provide its own replicated storage across the vault nodes within a cluster
+ - define a local path to store replicated date
+ - all data is replicated among all nodes in the cluster
+ - eliminates the need to also run a consul cluster and manage it
