@@ -300,3 +300,25 @@ $ vault secrets enable azure
 $ vault secrets enable -path=vaultcourse kv
 $ vault kv put vaultcourse/bryan bryan=bryan
 $ vault kv get vaultcourse/bryan 
+
+Pros cons unseal options
+1. key shards
+ + simplest form of unsealing
+ + works on any platform
+ + configuration options make it flexible
+ - introduces risk for storing keys
+ - requires manual intervention for unsealing
+ - keys can be inadvertently shared and require rotation
+2. auto unseal
+ + automatic unsealing of vault
+ + set and forget
+ + integration benefits for running on same platform
+ - regional requirement for cloud HSMs
+ - cloud/vendor lock-in
+3. transit unseal
+ + automatic unsealing of vault
+ + set and forget
+ + platform agnostic
+ + useful when running many vault clusters across clouds/data centers
+ - requires a centralized vault cluster
+ - centralized vault cluster needs the highest level of uptime
