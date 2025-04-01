@@ -66,3 +66,4 @@ Seal and unseal
  - sealing vault means vault throws away the encryption key and requires another unseal to perform any further operations
  - vault will start in a sealed state - you can also manually seal it via ui, cli or api
  - when would i seal vault? key shards are inadvertently exposed, detection of a compromise or network intrusion or spyware/malware on the vault nodes
+ - options - 1. key sharding (shamir) 2. cloud auto unseal 3. transit auto unseal
