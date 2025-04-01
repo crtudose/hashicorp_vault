@@ -22,3 +22,9 @@ Storage backends
  - all data is encrypted in transit TLS and at rest using aes256
  - not all storage backends are created equal (some support high availability and others have better tools for management & data protection)
  - there is only one storage backend per vault cluster
+Secrets engines
+ - vault components that are responsible for managing secrets for your organization
+ - secrets engines can store, generate and encrypt data
+ - many secrets engines connect to other services to generate dynamic credentials on-demand
+ - many secrets engines can be enabled and used as needed (even multiple secrets engines of the same type)
+ - secret engines are enabled and isolated at a path (all interactions are done directly with the path itself)
