@@ -48,3 +48,19 @@ Vault paths
  - system backend is a default backend in vault is mounted at the /sys endpoint
  - vault components can be enabled at any path you'd like using the -path flag
  - vault has a few system reserved path which you cannot use or remove. auth/ (endpoint for auth method configuration) cubbyhole (endpoint used by the cubbyhole secrets engine) identity/ (endpoint for configuring vault identity) secret/ (endpoint used by key/vault v2 secrets engine if running in dev mode) sys/ (system endpoint for configuring vault)
+How does vault protect my data?
+Master key - used to decrypt the encryption key
+ - created during vault initialization or during a rekey operation 
+ - never written to storage when using traditional unseal mechanism
+ - written to core/master (storage backend) when using auto unseal
+Encryption key - used to encrypt/decrypt data written to storage backend
+ - encrypted by the master key
+ - stored alongside the data in a keyring on the storage backend
+ - can be easily rotated (manual operation)
+
+Seal and unseal
+ - vault starts in a sealed state, meaning it knows where to access the data, and how, but can't decrypt it
+ - almost no operations are possible when vault is in a sealed state (only status check and unsealing are possible)
+ - unsealing vault means that a node can reconstruct the master key in order to decrypt the encryption key and ultimately read the data
+ - after unsealing, the necryption key is stored in memory
+ - sealing vault means vault throws away the encryption key and requires another unseal to perform any further operations
