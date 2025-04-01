@@ -75,3 +75,10 @@ Unseal with key shards
  - when initializing vault, you can request the individual shards to be encrypted with different pgp keys 
  - when unsealing vault, you will need an equal number of employees to provide their key which is equal to the threshold
  - key shards should not be stored online and should be highly protected - ideally stored encrypted
+
+Unsealing with auto unseal 
+ - auto unseal uses a cloud or on-premises HSM to decrypt the master key
+ - vault configuration file identifies the particular key to use for decryption 
+ - cloud auto unseal automatically unseals vault upon service or node restart without additional intervention
+ - available in both open source and enterprise editions
+ - formally an enterprise-pnly feature until vault 1.0
