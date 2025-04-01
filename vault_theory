@@ -16,3 +16,9 @@ Deploying the integrated storage backend
  - define a local path to store replicated date
  - all data is replicated among all nodes in the cluster
  - eliminates the need to also run a consul cluster and manage it
+Storage backends
+ - configures location for storage of vault data
+ - storage is defined in the main vault configuration file with desired parameters
+ - all data is encrypted in transit TLS and at rest using aes256
+ - not all storage backends are created equal (some support high availability and others have better tools for management & data protection)
+ - there is only one storage backend per vault cluster
