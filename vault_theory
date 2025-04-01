@@ -28,3 +28,23 @@ Secrets engines
  - many secrets engines connect to other services to generate dynamic credentials on-demand
  - many secrets engines can be enabled and used as needed (even multiple secrets engines of the same type)
  - secret engines are enabled and isolated at a path (all interactions are done directly with the path itself)
+Auth methods
+ - vault components that perform authentication and manage identities
+ - responsible for assigning identity and policies to a user
+ - multiple authentication methods can be enabled depending on your use case (auth methods can be differentiated by human vs system methods)
+ - once authenticated, vault will issue a client token used to make all subsequent vault requests (r/w). The fundamental goal of all auth methods is to obtain a token and each token has an associated policy and a TTL
+ - default authentication method for a new vault deployment is token
+Audit devices
+ - keeps detailed log of all requests and responses to vault
+ - audit log is formatted using json
+ - sensitive information is hashed before logging
+ - can and should have more than one audit device enabled. Vault requires at least one audit device to write the log before completing the vault request if enabled (prioritizes safety over availability)
+
+Vault paths 
+ - everything in vault is path-based
+ - the path prefix tells vault which component a request should be routed
+ - secret engines, auth methods, and audit devices are mounted at a specified path. Often referred to as a mount.
+ - paths available are dependent on the features enabled in vault, such as auth methods and secrets engines
+ - system backend is a default backend in vault is mounted at the /sys endpoint
+ - vault components can be enabled at any path you'd like using the -path flag
+ - vault has a few system reserved path which you cannot use or remove. auth/ (endpoint for auth method configuration) cubbyhole (endpoint used by the cubbyhole secrets engine) identity/ (endpoint for configuring vault identity) secret/ (endpoint used by key/vault v2 secrets engine if running in dev mode) sys/ (system endpoint for configuring vault)
