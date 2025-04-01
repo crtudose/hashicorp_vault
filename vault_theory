@@ -64,3 +64,5 @@ Seal and unseal
  - unsealing vault means that a node can reconstruct the master key in order to decrypt the encryption key and ultimately read the data
  - after unsealing, the necryption key is stored in memory
  - sealing vault means vault throws away the encryption key and requires another unseal to perform any further operations
+ - vault will start in a sealed state - you can also manually seal it via ui, cli or api
+ - when would i seal vault? key shards are inadvertently exposed, detection of a compromise or network intrusion or spyware/malware on the vault nodes
