@@ -93,4 +93,57 @@ Vault configuration file
  - the configuration file includes different stanzas and parameters to define a variety of configuration options
  - configuration file is specified when starting vault using -config flag
  $ vault server -config <location>
- - usually stored somewhere in /etc
+ - usually stored somewhere in /etc but can be in different location cush as /etc/vault.d/vault.hcl
+ $ vault server -config /etc/vault.d/vault.hcl
+ - we configure in the file: storage backend, listener(s) and port, tls certificate, seal type, cluster name, log level, UI, cluster IP and Port
+
+example configuration file:
+listener "tcp" {
+ address = "0.0.0.0:8200"
+ cluster_address = "0.0.0.0:8201"
+ tls_disable = "true"
+}
+seal "awskms" {
+ region = "<region>"
+ kms_key_id = "<kms_key>"
+}
+api_addr = "https://IPADDRESS:8200"
+ui = true
+cluster_name = "vault_cluster"
+
+available stanzas:
+ - seal - seal type
+ - listener - addresses/ports for vault
+ - storage - storage backend
+ - telemetry - where to publish metrics to upstream systems
+example of parameters:
+ - cluster_name - identifier for the cluster - vault with with auto-generate name if omitted
+ - log_level - specifies the log level to use - trace, debug, error, warn, info
+ - ui - enables the built-in web ui
+ - api_addr - address to advertise to other vault servers for cluster redirection
+ - cluster_addr - address to advertise to other vault servers for request forwarding
+
+example configuration file:
+storage "consul" {
+ address = "127.0.0.1:8500"
+ path = "vault/"
+ token = "123456789"
+}
+listener "tcp" {
+ address = "0.0.0.0:8200"
+ cluster_address = "0.0.0.0:8201"
+ tls_cluster = 0
+ tls_cert_file = "/etc/vault.d/client.pem"
+ tls_key_file = "/etc/vault.d/cert.key"
+ tls_disable_client_certs = "true"
+}
+seal "awskms" {
+ region = "us-east-1"
+ kms_key_id = "123456789"
+ endpoint = "example.kms.us-east-1.vpce".amazonaws.com"
+}
+api_addr = "https://vault-us-east-1.example.com:8200"
+cluster_addr = "https://node-a-us-east-1.example.com:8201"
+cluster_name = "vault-prod-us-east-1"
+ui = true
+log_level = "INFO"
