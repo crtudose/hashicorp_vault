@@ -79,10 +79,18 @@ Unsealing with auto unseal
  - vault configuration file identifies the particular key to use for decryption 
  - cloud auto unseal automatically unseals vault upon service or node restart without additional intervention
  - available in both open source and enterprise editions
- - formally an enterprise-pnly feature until vault 1.0
+ - formally an enterprise-only feature until vault 1.0
 Unsealing with transit auto unseal
  - uses the transit secret engine of a different vault cluster
  - the transit secret engine may be configured in a namespace
  - the transit unseal supports key rotation 
  - available in open source and enterprise
  - the core vault cluster must be highly-available
+
+Vault configuration file
+-------------------
+ - vault servers are configured using a file (written in hcl of json)
+ - the configuration file includes different stanzas and parameters to define a variety of configuration options
+ - configuration file is specified when starting vault using -config flag
+ $ vault server -config <location>
+ - usually stored somewhere in /etc
