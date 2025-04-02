@@ -1,3 +1,5 @@
+# https://github.com/btkrausen/vault-codespaces/blob/main/labs/lab_audit_devices.md
+
 root@ctudose:~# vault status
 Key                Value
 ---                -----
@@ -49,9 +51,120 @@ token_renewable      false
 token_policies       ["root"]
 identity_policies    []
 policies             ["root"]
-root@ctudose:~# mkdir -p /var/log/vault
+
+# Create directory for audit logs with appropriate permissions
+root@ctudose:~# mkdir -p /var/log/vault 
 root@ctudose:~# chown vault:vault /var/log/vault
 root@ctudose:~# ls -lda /var/log/vault
 drwxr-xr-x 2 vault vault 4096 Apr  2 11:11 /var/log/vault
-root@ctudose:~# vault audit enable file file_path=/var/log/vault/audit.log
+
+# Enable file audit device
+root@ctudose:~# vault audit enable file file_path=/var/log/vault/audit.log  
 Success! Enabled the file audit device at: file/
+
+# View more details about the audit device, including the targeted path/file
+root@ctudose:~# vault audit list --detailed
+Path     Type    Description    Replication    Options
+----     ----    -----------    -----------    -------
+file/    file    n/a            replicated     file_path=/var/log/vault/audit.log
+
+# Repeat enabling KV secrets engine to purposely create an error
+root@ctudose:~# vault secrets enable -path=secret kv-v2
+Error enabling: Error making API request.
+
+URL: POST http://127.0.0.1:8200/v1/sys/mounts/secret
+Code: 400. Errors:
+
+* path is already in use at secret/
+
+# Create a test secret
+root@ctudose:~# vault kv put secret/test-secret username=admin password=vault-demo
+Success! Data written to: secret/test-secret
+
+# read the secret
+root@ctudose:~# vault kv get secret/test-secret
+====== Data ======
+Key         Value
+---         -----
+password    vault-demo
+username    admin
+
+#update the secret
+root@ctudose:~# vault kv put secret/test-secret username=admin password=updated-password
+Success! Data written to: secret/test-secret
+
+#list secrets
+root@ctudose:~# vault kv list secret/
+Keys
+----
+first
+my-secret
+test-secret
+user
+
+# delete the secret
+root@ctudose:~# vault kv delete secret/test-secret
+Success! Data deleted (if it existed) at: secret/test-secret
+
+# Parse JSON logs with jq (if installed)
+root@ctudose:~# cat /var/log/vault/audit.log | jq '.'
+{
+  "auth": {
+    "accessor": "hmac-sha256:18a0fc9bb8a05f4131f78cf39c456e0763fd2ecc8efd7092790b9349eedb0820",
+    "client_token": "hmac-sha256:51c5d63ee5a99bf100558bc4cb66a4a789d639d4bc8b86d2ac8bd687c7b6e6b7",
+    "display_name": "root",
+    "policies": [
+      "root"
+    ],
+    "policy_results": {
+      "allowed": true,
+      "granting_policies": [
+        {
+          "type": ""
+        },
+        {
+          "name": "root",
+          "namespace_id": "root",
+          "type": "acl"
+        }
+      ]
+    },
+    "token_policies": [
+      "root"
+    ],
+    "token_issue_time": "2025-03-24T15:57:33Z",
+    "token_type": "service"
+  },
+  "request": {
+    "client_id": "0DHqvq2D77kL2/JTPSZkTMJbkFVmUu0TzMi0jiXcFy8=",
+    "client_token": "hmac-sha256:51c5d63ee5a99bf100558bc4cb66a4a789d639d4bc8b86d2ac8bd687c7b6e6b7",
+    "client_token_accessor": "hmac-sha256:18a0fc9bb8a05f4131f78cf39c456e0763fd2ecc8efd7092790b9349eedb0820",
+    "id": "5da58b94-33ad-ec7f-46b0-ba5006f10305",
+    "mount_accessor": "kv_7b18ca03",
+    "mount_class": "secret",
+    "mount_point": "secret/",
+    "mount_running_version": "v0.20.0+builtin",
+    "mount_type": "kv",
+    "namespace": {
+      "id": "root"
+    },
+    "operation": "delete",
+    "path": "secret/test-secret",
+    "remote_address": "127.0.0.1",
+    "remote_port": 57276
+  },
+  "time": "2025-04-02T11:16:31.112285233Z",
+  "type": "response"
+}
+
+# Search for specific operations performed above
+$ grep "secret/test-secret" /var/log/vault/audit.log | jq '.'
+
+# Find all KV secret operations
+grep "secret/" /var/log/vault/audit.log | jq '.'
+
+# Look for specific authentication events
+grep "login" /var/log/vault/audit.log | jq '.'
+
+# Find error events
+grep "error" /var/log/vault/audit.log | jq '.'
