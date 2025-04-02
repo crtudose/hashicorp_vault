@@ -180,3 +180,11 @@ socket
  - if there are any audit devices enabled, vault requires that it can write to the log before completing the client request (prioritizes safety over availability)
  - if vault cannot write to a persistent log, it will stop responding to client requests - which means vault is down
  - vault requires at least one audit device to write the log before completing the vault request - if enabled
+
+Vault interfaces
+------------------
+ - three interfaces to interact with vault - ui, cli and http api
+ - not all vault features are available via ui and cli but all features can be accessed using the http api
+ - calls from the cli and ui invoke the http api. cli is just a thin wrapper on the http api
+ - ui must be enabled via configuration file
+ - authentication required to access any of the interfaces
