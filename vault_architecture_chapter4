@@ -147,3 +147,13 @@ cluster_addr = "https://node-a-us-east-1.example.com:8201"
 cluster_name = "vault-prod-us-east-1"
 ui = true
 log_level = "INFO"
+
+Storage backend
+-------------------
+ - configures location for storage of vault data
+ - open-source users can choose a storage backend based on their preferences 
+ - enterprise vault clusters should use hashicorp consul or integrated storage
+ - as options we have aerospike, azure, cassandra, covkroachDB, consul, couchDB, etcd, ...
+ - if we do not working in production, we can choose in-memory
+ - in production, with HA support not needed and hashicorp not supported we can use Azure, cassandra, cockroachDB, couchDB, manta, mssql, s3, swift and if Hashicorp is supported we can use Filesystem
+ - in production, with HA support and Hashicorp not supported, we can use DynamoDB, Etcd, FoundationDB, Google Cloud Spanner, Google Cloud Storage, MySQL, PostgreSQL, Zookeeper and if hashicorp supported, we can  use consul or raft
