@@ -166,13 +166,17 @@ Audit device
  - log files should be protected as a user with permission can still check the vault of those secrets via the /sts/audit-hash API compare to the log file
  $ vault audit enable file file_path=/var/log/vault_audit_log.log
 file
- - writes to a file - appends logs to the file
- - does not assist with log rotation 
- - use fluentd or similar tool to send to collector
+ -> writes to a file - appends logs to the file
+ -> does not assist with log rotation 
+ -> use fluentd or similar tool to send to collector
 syslog 
- - writes audit logs to a syslog 
- - sends to a local agent only
+ -> writes audit logs to a syslog 
+ -> sends to a local agent only
 socket 
- - writes toa  tcp, udp or unix socket
- - unreliable 
- - should be used where strong guarantees are not required
+ -> writes toa  tcp, udp or unix socket
+ -> unreliable 
+ -> should be used where strong guarantees are not required
+ - can and should have more than one audit device enabled
+ - if there are any audit devices enabled, vault requires that it can write to the log before completing the client request (prioritizes safety over availability)
+ - if vault cannot write to a persistent log, it will stop responding to client requests - which means vault is down
+ - vault requires at least one audit device to write the log before completing the vault request - if enabled
