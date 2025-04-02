@@ -67,7 +67,6 @@ Seal and unseal
  - vault will start in a sealed state - you can also manually seal it via ui, cli or api
  - when would i seal vault? key shards are inadvertently exposed, detection of a compromise or network intrusion or spyware/malware on the vault nodes
  - options - 1. key sharding (shamir) 2. cloud auto unseal 3. transit auto unseal
-
 Unseal with key shards
  - default option for unsealing - no config needed
  - no single person should have access to all key shards
@@ -75,10 +74,15 @@ Unseal with key shards
  - when initializing vault, you can request the individual shards to be encrypted with different pgp keys 
  - when unsealing vault, you will need an equal number of employees to provide their key which is equal to the threshold
  - key shards should not be stored online and should be highly protected - ideally stored encrypted
-
 Unsealing with auto unseal 
  - auto unseal uses a cloud or on-premises HSM to decrypt the master key
  - vault configuration file identifies the particular key to use for decryption 
  - cloud auto unseal automatically unseals vault upon service or node restart without additional intervention
  - available in both open source and enterprise editions
  - formally an enterprise-pnly feature until vault 1.0
+Unsealing with transit auto unseal
+ - uses the transit secret engine of a different vault cluster
+ - the transit secret engine may be configured in a namespace
+ - the transit unseal supports key rotation 
+ - available in open source and enterprise
+ - the core vault cluster must be highly-available
