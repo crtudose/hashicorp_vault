@@ -157,3 +157,22 @@ Storage backend
  - if we do not working in production, we can choose in-memory
  - in production, with HA support not needed and hashicorp not supported we can use Azure, cassandra, cockroachDB, couchDB, manta, mssql, s3, swift and if Hashicorp is supported we can use Filesystem
  - in production, with HA support and Hashicorp not supported, we can use DynamoDB, Etcd, FoundationDB, Google Cloud Spanner, Google Cloud Storage, MySQL, PostgreSQL, Zookeeper and if hashicorp supported, we can  use consul or raft
+
+Audit device
+------------------
+ - keep a detailed log of all authenticated requests and responses to vault
+ - audit log is formatted using json
+ - sensitive information is hashed with a salt using hmac-sha256 to ensure secrets and tokens aren't ever in plain text
+ - log files should be protected as a user with permission can still check the vault of those secrets via the /sts/audit-hash API compare to the log file
+ $ vault audit enable file file_path=/var/log/vault_audit_log.log
+file
+ - writes to a file - appends logs to the file
+ - does not assist with log rotation 
+ - use fluentd or similar tool to send to collector
+syslog 
+ - writes audit logs to a syslog 
+ - sends to a local agent only
+socket 
+ - writes toa  tcp, udp or unix socket
+ - unreliable 
+ - should be used where strong guarantees are not required
