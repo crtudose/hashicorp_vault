@@ -168,3 +168,42 @@ grep "login" /var/log/vault/audit.log | jq '.'
 
 # Find error events
 grep "error" /var/log/vault/audit.log | jq '.'
+
+# Create logrotate configuration
+tee /etc/logrotate.d/vault <<EOF
+/var/log/vault/audit.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 vault vault
+}
+EOF
+
+# View the contents of the vault audit directory (and see there's only one file)
+ls /var/log/vault
+audit.log
+
+# Force a log rotatation
+logrotate -f /etc/logrotate.d/vault
+
+# View the contents of the vault audit directory (and see the rotated file)
+# Notice that audit.log is now empty
+ls /var/log/vault
+audit.log  audit.log.1
+
+# Disable audit device
+vault audit disable file/
+Success! Disabled audit device (if it was enabled) at: file/
+
+# Re-enable with different options
+vault audit enable -path=file2 file file_path=/var/log/vault/audit2.log
+Success! Enabled the file audit device at: file2/
+
+# List all enabled audit devices
+vault audit list -detailed
+Path      Type    Description    Replication    Options
+----      ----    -----------    -----------    -------
+file2/    file    n/a            replicated     file_path=/var/log/vault/audit2.log
