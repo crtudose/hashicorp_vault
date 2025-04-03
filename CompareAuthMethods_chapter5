@@ -95,3 +95,27 @@ Path      Plugin      Accessor                  Default TTL    Max TTL    Token 
 ----      ------      --------                  -----------    -------    ----------         -----------    ---------    -----------------------    -------    -----------                    ----                                    -------    ---------------          --------------    ------------------
 bryan/    userpass    auth_userpass_efd6fc45    86400          system     default-service    replicated     false        false                      map[]      local credentials for vault    34e74bc0-7645-48d8-1843-303d5d27a0c1    n/a        v1.18.3+builtin.vault    n/a               supported
 token/    token       auth_token_9c496121       system         system     default-service    replicated     false        false                      map[]      token based credentials        71a6d904-bd0a-69ec-b3a3-baca996abf8e    n/a        v1.18.3+builtin.vault    n/a               n/a
+root@ctudose:~# vault write auth/bryan/users/krausen password=vault policies=bryan
+Success! Data written to: auth/bryan/users/krausen
+root@ctudose:~# vault list auth/bryan/users
+Keys
+----
+krausen
+
+root@ctudose:~# vault read auth/bryan/users/krausen
+Key                        Value
+---                        -----
+policies                   [bryan]
+token_bound_cidrs          []
+token_explicit_max_ttl     0s
+token_max_ttl              0s
+token_no_default_policy    false
+token_num_uses             0
+token_period               0s
+token_policies             [bryan]
+token_ttl                  0s
+token_type                 default
+root@ctudose:~# vault auth enable approle
+Success! Enabled approle auth method at: approle/
+root@ctudose:~# vault write auth/approle/role/bryan token_ttl=20m policies=bryan
+Success! Data written to: auth/approle/role/bryan
