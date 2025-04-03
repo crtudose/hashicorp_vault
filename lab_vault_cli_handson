@@ -1,0 +1,113 @@
+# Verify Vault is running
+$ vault status
+
+# Set Vault address and token (if not already set)
+$ export VAULT_ADDR='http://127.0.0.1:8200'
+$ export VAULT_TOKEN='root' 
+
+Part 1: Basic CLI Operations
+# Get general help
+$ vault help
+
+# Get help for a specific command
+$ vault kv help
+# Check server status
+$ vault status
+
+# View server configuration
+$ vault read sys/config/state/sanitized
+
+Part 2: Working with Secrets
+# Enable KV version 2 at path 'secrets'
+$ vault secrets enable -path=prd-secrets -version=2 kv
+
+# Verify enabled secrets engines
+$ vault secrets list
+# Create a secret
+$ vault kv put prd-secrets/myapp/config \
+    database_url="postgresql://localhost:5432/mydb" \
+    api_key="super-secret-123"
+
+# Read a secret
+$ vault kv get prd-secrets/myapp/config
+
+# Read specific version
+$ vault kv get -version=1 prd-secrets/myapp/config
+
+# Read specific field
+$ vault kv get -field=api_key prd-secrets/myapp/config
+
+# Format output as JSON
+$ vault kv get -format=json prd-secrets/myapp/config
+
+# Update a secret
+$ vault kv patch prd-secrets/myapp/config \
+    api_key="new-secret-456"
+
+# Delete latest version of a secret
+$ vault kv delete prd-secrets/myapp/config
+
+# Permanently delete all versions
+$ vault kv metadata delete prd-secrets/myapp/config
+
+Part 3: Policy Management
+# Create policy file
+$ cat > app-policy.hcl << EOF
+path "prd-secrets/data/myapp/*" {
+  capabilities = ["read", "list"]
+}
+path "prd-secrets/metadata/myapp/*" {
+  capabilities = ["list", "read"]
+}
+EOF
+
+# Write policy to Vault
+$ vault policy write app-reader app-policy.hcl
+
+# View policy
+$ vault policy read app-reader
+
+# List all policies
+$ vault policy list
+
+Part 4: Auth Methods
+# Enable userpass auth method
+$ vault auth enable userpass
+
+# Create a user
+$ vault write auth/userpass/users/myapp \
+    password="password123" \
+    policies="app-reader"
+
+# List users
+$ vault list auth/userpass/users
+
+# Login and save token
+$ VAULT_TOKEN=$(vault login -method=userpass \
+    username=myapp \
+    password=password123 \
+    -format=json | jq -r '.auth.client_token')
+
+# Verify token and permissions
+$ vault token lookup
+
+Part 5: Advanced Operations
+# Update secret multiple times
+$ vault kv put prd-secrets/myapp/config message="version 1"
+$ vault kv put prd-secrets/myapp/config message="version 2"
+$ vault kv put prd-secrets/myapp/config message="version 3"
+
+# Soft delete latest version
+$ vault kv delete prd-secrets/myapp/config
+
+# Undelete version
+$ vault kv undelete -versions=3 prd-secrets/myapp/config
+
+# Add custom metadata and set the maximum versions of the secret
+$ vault kv metadata put  \
+    -max-versions 5 \
+    -custom-metadata "environment=development" \
+    prd-secrets/myapp/config
+
+# Read metadata and see versions of secrets
+$ vault kv metadata get prd-secrets/myapp/config
