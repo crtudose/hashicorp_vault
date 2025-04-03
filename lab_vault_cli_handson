@@ -1,3 +1,5 @@
+https://github.com/btkrausen/vault-codespaces/blob/main/labs/lab_vault_cli.md
+
 # Verify Vault is running
 $ vault status
 
