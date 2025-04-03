@@ -1,0 +1,10 @@
+Auth methods
+ - vault components that perform authentication and manage identities
+ - responsible for assigning identity and policies to a user
+ - multiple authentication methods can be enabled depending on your use case (auth methods can be differentiated by human vs system methods)
+ - once authenticated, vault will issue a client token used to make all subsequent vault requests (r/w). The fundamental goal of all auth methods is to obtain a token and each token has an associated policy and a TTL
+ - default authentication method for a new vault deployment is token
+
+ - tokens are the core method for authentication within vault (most operations in vault require an existing token)
+ - the token auth method is responsible for creating and storing tokens (token auth method cannot be disabled) 
+ - authentication with external identity (ldap, oidc) will generate a token
