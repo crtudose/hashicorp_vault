@@ -188,3 +188,5 @@ Vault interfaces
  - calls from the cli and ui invoke the http api. cli is just a thin wrapper on the http api
  - ui must be enabled via configuration file
  - authentication required to access any of the interfaces
+
+Vault UI handson: https://github.com/btkrausen/vault-codespaces/blob/main/labs/lab_vault_ui.md
