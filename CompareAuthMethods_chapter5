@@ -61,3 +61,23 @@ Path         Plugin      Accessor                  Default TTL    Max TTL    Tok
 ----         ------      --------                  -----------    -------    ----------         -----------    ---------    -----------------------    -------    -----------                ----                                    -------    ---------------          --------------    ------------------
 token/       token       auth_token_9c496121       system         system     default-service    replicated     false        false                      map[]      token based credentials    71a6d904-bd0a-69ec-b3a3-baca996abf8e    n/a        v1.18.3+builtin.vault    n/a               n/a
 userpass/    userpass    auth_userpass_3c91438f    system         system     default-service    replicated     false        false                      map[]      n/a                        4aa10874-4701-6e48-340b-d67aaa69b1fe    n/a        v1.18.3+builtin.vault    n/a               supported
+
+root@ctudose:~# vault auth list
+Path             Type        Accessor                  Description                Version
+----             ----        --------                  -----------                -------
+token/           token       auth_token_9c496121       token based credentials    n/a
+userpass/        userpass    auth_userpass_3c91438f    n/a                        n/a
+vault-course/    userpass    auth_userpass_d36b6775    n/a                        n/a
+root@ctudose:~# vault auth disable userpass
+Success! Disabled the auth method (if it existed) at: userpass/
+root@ctudose:~# vault auth list
+Path             Type        Accessor                  Description                Version
+----             ----        --------                  -----------                -------
+token/           token       auth_token_9c496121       token based credentials    n/a
+vault-course/    userpass    auth_userpass_d36b6775    n/a                        n/a
+root@ctudose:~# vault auth disable vault-course
+Success! Disabled the auth method (if it existed) at: vault-course/
+root@ctudose:~# vault auth list
+Path      Type     Accessor               Description                Version
+----      ----     --------               -----------                -------
+token/    token    auth_token_9c496121    token based credentials    n/a
