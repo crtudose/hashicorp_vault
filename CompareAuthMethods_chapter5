@@ -24,3 +24,15 @@ Auth methods
 
  - auth methods can be enabled/disabled and configured using the ui, api, or the cli (we cannot do everything from ui)
  - you must provide a valid token to enable, disable, or modify auth emthods in vault. The vault must also have the proper privileges.
+ 
+ - each auth method is enabled at a path
+ - you can choose a path name when you enable the auth method
+ - if you do not provide a name, the auth method will be enabled at its default path (path's name is equal to the type of auth method)
+ $ vault auth enable approle
+
+ $ vault auth
+  - enable
+  - disable
+  - list
+  - tune
+  - help
