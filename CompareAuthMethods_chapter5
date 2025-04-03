@@ -40,4 +40,9 @@ Auth methods
  - enable an auth method at the default path 
  $ vault auth enable approle
  - enable an auth method using a custom path
- $ vault auth enable -path=vault-course approle (where "auth" is the type of vault object you want to work with, "enable" is the subcommand and "approle" is the type of auth method)
+ $ vault auth enable -path=vault-course -description=MyApps approle (where "auth" is the type of vault object you want to work with, "enable" is the subcommand and "approle" is the type of auth method, "-path" is for customizing the path name)
+
+ - After the auth method has been enabled, use the auth prefix to configure the auth method
+ $ vault write auth/<path_name>/<option>
+ Example:
+ $ vault write auth/approle/role/vault-course secret_id_ttl=10m token_num_uses=10 token_ttl=20m token_max_ttl=30m secret_id_num_uses=40
