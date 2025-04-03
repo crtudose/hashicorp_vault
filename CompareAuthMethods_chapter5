@@ -21,3 +21,6 @@ Auth methods
  - the token auth method is enabled by default, and you cannot enable another nor disable the tokens auth method
  - new vault deployment will use a token for auth
  - only method of auth for a new vault deployment is a root token
+
+ - auth methods can be enabled/disabled and configured using the ui, api, or the cli (we cannot do everything from ui)
+ - you must provide a valid token to enable, disable, or modify auth emthods in vault. The vault must also have the proper privileges.
