@@ -10,3 +10,8 @@ Auth methods
  - authentication with external identity (ldap, oidc) will generate a token
 
  - if you do not supply a token for non-authentication requests, there are no redirects for authentication (will get a 403 access denied)
+ - workflow 1. authenticate with credentials 
+   2. validate credentials against provider 
+   3. generate vault token with policy and ttl 
+   4. return token to user 
+   5. access secrets in vault using token
