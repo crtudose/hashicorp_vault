@@ -81,3 +81,17 @@ root@ctudose:~# vault auth list
 Path      Type     Accessor               Description                Version
 ----      ----     --------               -----------                -------
 token/    token    auth_token_9c496121    token based credentials    n/a
+root@ctudose:~# vault auth enable -path=bryan -description="local credentials for vault" userpass
+Success! Enabled userpass auth method at: bryan/
+root@ctudose:~# vault auth list
+Path      Type        Accessor                  Description                    Version
+----      ----        --------                  -----------                    -------
+bryan/    userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
+token/    token       auth_token_9c496121       token based credentials        n/a
+root@ctudose:~# vault auth tune -default-lease-ttl=24h bryan/
+Success! Tuned the auth method at: bryan/
+root@ctudose:~# vault auth list -detailed
+Path      Plugin      Accessor                  Default TTL    Max TTL    Token Type         Replication    Seal Wrap    External Entropy Access    Options    Description                    UUID                                    Version    Running Version          Running SHA256    Deprecation Status
+----      ------      --------                  -----------    -------    ----------         -----------    ---------    -----------------------    -------    -----------                    ----                                    -------    ---------------          --------------    ------------------
+bryan/    userpass    auth_userpass_efd6fc45    86400          system     default-service    replicated     false        false                      map[]      local credentials for vault    34e74bc0-7645-48d8-1843-303d5d27a0c1    n/a        v1.18.3+builtin.vault    n/a               supported
+token/    token       auth_token_9c496121       system         system     default-service    replicated     false        false                      map[]      token based credentials        71a6d904-bd0a-69ec-b3a3-baca996abf8e    n/a        v1.18.3+builtin.vault    n/a               n/a
