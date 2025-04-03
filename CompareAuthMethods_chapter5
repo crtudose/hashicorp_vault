@@ -36,3 +36,8 @@ Auth methods
   - list
   - tune
   - help
+
+ - enable an auth method at the default path 
+ $ vault auth enable approle
+ - enable an auth method using a custom path
+ $ vault auth enable -path=vault-course approle (where "auth" is the type of vault object you want to work with, "enable" is the subcommand and "approle" is the type of auth method)
