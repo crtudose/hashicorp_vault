@@ -119,3 +119,6 @@ root@ctudose:~# vault auth enable approle
 Success! Enabled approle auth method at: approle/
 root@ctudose:~# vault write auth/approle/role/bryan token_ttl=20m policies=bryan
 Success! Data written to: auth/approle/role/bryan
+
+root@ctudose:~# curl --header "X-Vault-Token:hv" --request POST --data @auth.json http://127.0.0.1:8200/v1/sys/auth/approle
+{"errors":["path is already in use at approle/"]}
