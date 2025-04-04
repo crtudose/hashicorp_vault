@@ -122,3 +122,10 @@ Success! Data written to: auth/approle/role/bryan
 
 root@ctudose:~# curl --header "X-Vault-Token:hv" --request POST --data @auth.json http://127.0.0.1:8200/v1/sys/auth/approle
 {"errors":["path is already in use at approle/"]}
+
+root@ctudose:~# vault auth list
+Path        Type        Accessor                  Description                    Version
+----        ----        --------                  -----------                    -------
+approle/    approle     auth_approle_0d1b7aa0     n/a                            n/a
+bryan/      userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
+token/      token       auth_token_9c496121       token based credentials        n/a
