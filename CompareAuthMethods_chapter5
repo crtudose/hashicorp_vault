@@ -141,5 +141,23 @@ root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:820
 100    64  100    64    0     0  50513      0 --:--:-- --:--:-- --:--:-- 64000
 root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/secret-id | jq
 >> returns "missing client token"
+
 $ curl --request POST --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/secret-id | jq
 >> we grab the secret id from output
+
+#vault authentication using cli
+There are a few ways to authenticate to vault when using the cli. 
+ - use the $vault login command and authenticate usign a token or another auth method and makes use of a token helper
+ - use the VAULT_TOKEN environment variable (used if you already have a token)
+$ vault login s.x # by default, vault login uses a "token" method
+$ vault login -method=userpass username=bryan ("-method" is the auth method used to authenticate and "username" is the argument for passing additional data)
+ - token helper caches the token after authentication which stores the token in a local file so it can be referenced for subsequent requests
+ - anytime you login, do a vault login, it does not matter which auth method you're going to use it's going to create .vault-token file
+ - as workflow 1. initial authentication 2. returns token 3. creates token helper file 4. request for secret 
+
+Parsing the json response to obtain the vault token
+$ export VAULT_ADDR="https://vault.example.com:8200"
+$ export VAULT_FORMAT=json
+$ OUTPUT=$(vault write auth/approle/login role_id="1234567" secret_id="12323rwgf")
+$ VAULT_TOKEN=$(echo $OUTPUT | jq '.auth.client_token' -j)
+$ vault login $VAULT_TOKEN
