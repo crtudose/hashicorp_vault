@@ -129,3 +129,9 @@ Path        Type        Accessor                  Description                   
 approle/    approle     auth_approle_0d1b7aa0     n/a                            n/a
 bryan/      userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
 token/      token       auth_token_9c496121       token based credentials        n/a
+
+root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/secret-id | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    64  100    64    0     0  50513      0 --:--:-- --:--:-- --:--:-- 64000
+root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/role-id | jq
