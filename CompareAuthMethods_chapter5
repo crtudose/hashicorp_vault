@@ -131,11 +131,15 @@ approle/    approle     auth_approle_0d1b7aa0     n/a                           
 bryan/      userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
 token/      token       auth_token_9c496121       token based credentials        n/a
 
-#create role using api using POST request type and provide data from file called policies
-root@ctudose:~# curl --header "X-Vault-Token:hv" --request POST --data @policies.json http://127.0.0.1:8200/v1/sys/auth/approle
+#create role using api using POST request type and provide data from file called policies to create new app role
+root@ctudose:~# curl --header "X-Vault-Token:hv" --request POST --data @policies.json http://127.0.0.1:8200/v1/sys/auth/approle/role/vaultcourse
 
-root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/secret-id | jq
+#fetch role id of vaultcourse
+root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/role-id | jq
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100    64  100    64    0     0  50513      0 --:--:-- --:--:-- --:--:-- 64000
-root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/role-id | jq
+root@ctudose:/etc/vault.d# curl --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/secret-id | jq
+>> returns "missing client token"
+$ curl --request POST --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/approle/role/vaultcourse/secret-id | jq
+>> we grab the secret id from output
