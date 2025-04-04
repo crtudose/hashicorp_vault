@@ -189,3 +189,8 @@ It is up to the user to parse the response for the token and use that token for 
 Authenticating with an auth post json method where auth.json contains role_id and secret_id
 $ curl --request POST --data @auth.json https://vault.example.com:8200/v1/auth/approle/login
  - in the response we expect to see service token and policies associated with our token
+
+$ curl --request POST --data @password.json https://127.0.0.1:8200/v1/auth/okta/login/bryan@krausen.io | jq
+which will return a token
+
+$ curl --header "X-Vault-Token": s.x" http://127.0.0.1:8200/v1/secret/data/app01 | jq
