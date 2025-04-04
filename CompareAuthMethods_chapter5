@@ -179,3 +179,13 @@ secret-policy
 unseal
 root
 
+# vault authentication using the API
+Authentication requests to the vault http api return a json response that include: 
+ - the token
+ - the token accessor
+ - information about attached policies
+It is up to the user to parse the response for the token and use that token for any subsequent requests to vault
+
+Authenticating with an auth post json method where auth.json contains role_id and secret_id
+$ curl --request POST --data @auth.json https://vault.example.com:8200/v1/auth/approle/login
+ - in the response we expect to see service token and policies associated with our token
