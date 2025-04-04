@@ -164,3 +164,18 @@ $ vault login $VAULT_TOKEN
 >>> we are authenticating to vault using approle and providing a role id and secret id and output variable is storing the response
 >>> we are going to set vault token environment variable token that we get from output
 >>> vault token equals the parse of the output using jq
+
+#login using okta and username and password
+root@ctudose:~# vault login -method=okta username=bryan@krausen.io
+>> after the login succeeds we will see vault-token file with token stored 
+
+root@ctudose:~# vault auth enable azure
+Success! Enabled azure auth method at: azure/
+root@ctudose:~# vault auth disable azure
+Success! Disabled the auth method (if it existed) at: azure/
+root@ctudose:~# vault policy list
+default
+secret-policy
+unseal
+root
+
