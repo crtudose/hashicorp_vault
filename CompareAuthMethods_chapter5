@@ -445,3 +445,51 @@ $ vault write auth/okta/config base_url="okta.com" org_name="krausen" api_token=
 $ vault read auth/okta/config
 root@ctudose:~# vault write auth/okta/users/bryan@krausen.io policies=bryan
 Success! Data written to: auth/okta/users/bryan@krausen.io
+
+# auth method with userpass
+=====================
+root@ctudose:~# vault status
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    5
+Threshold       3
+Version         1.18.3
+Build Date      2024-12-16T14:00:53Z
+Storage Type    file
+Cluster Name    vault-cluster-08459538
+Cluster ID      3b6c2a8b-d20f-0ca8-b53c-ade159be4a6a
+HA Enabled      false
+root@ctudose:~# vault auth list
+Path        Type        Accessor                  Description                    Version
+----        ----        --------                  -----------                    -------
+approle/    approle     auth_approle_0d1b7aa0     n/a                            n/a
+bryan/      userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
+okta/       okta        auth_okta_2326158d        n/a                            n/a
+token/      token       auth_token_9c496121       token based credentials        n/a
+root@ctudose:~# vault auth enable userpass
+Success! Enabled userpass auth method at: userpass/
+root@ctudose:~# vault write auth/userpass/users/frank password=vault policies=bryan
+Success! Data written to: auth/userpass/users/frank
+root@ctudose:~# vault write auth/userpass/users/jamie password=cloud policies=bryan
+Success! Data written to: auth/userpass/users/jamie
+root@ctudose:~# vault list auth/userpass/users
+Keys
+----
+frank
+jamie
+root@ctudose:~# vault read auth/userpass/users/jamie
+Key                        Value
+---                        -----
+policies                   [bryan]
+token_bound_cidrs          []
+token_explicit_max_ttl     0s
+token_max_ttl              0s
+token_no_default_policy    false
+token_num_uses             0
+token_period               0s
+token_policies             [bryan]
+token_ttl                  0s
+token_type                 default
