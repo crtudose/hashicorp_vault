@@ -146,6 +146,7 @@ $ curl --request POST --header "X-Vault-Token:hf" http://127.0.0.1:8200/v1/auth/
 >> we grab the secret id from output
 
 #vault authentication using cli
+===============================
 There are a few ways to authenticate to vault when using the cli. 
  - use the $vault login command and authenticate usign a token or another auth method and makes use of a token helper
  - use the VAULT_TOKEN environment variable (used if you already have a token)
@@ -169,7 +170,6 @@ $ vault login $VAULT_TOKEN
 root@ctudose:~# vault login -method=okta username=bryan@krausen.io
 >> after the login succeeds we will see vault-token file with token stored 
 
-
 root@ctudose:~# vault auth enable azure
 Success! Enabled azure auth method at: azure/
 root@ctudose:~# vault auth disable azure
@@ -181,6 +181,7 @@ unseal
 root
 
 # vault authentication using the API
+===============================
 Authentication requests to the vault http api return a json response that include: 
  - the token
  - the token accessor
@@ -197,6 +198,7 @@ which will return a token
 $ curl --header "X-Vault-Token": s.x" http://127.0.0.1:8200/v1/secret/data/app01 | jq
 
 # vault entities
+===============================
 Vault creates an entity and attaches an alias to it if a corresponding entity doesn't already exist.
  - this is done using the identity secrets engine, which manages internal identities that are recognized by vault
  - an entity is a representation of a single person or system used to log into vault. Each has a unique value. Entity is made up of zero or more aliases.
