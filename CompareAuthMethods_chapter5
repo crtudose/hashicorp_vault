@@ -169,6 +169,7 @@ $ vault login $VAULT_TOKEN
 root@ctudose:~# vault login -method=okta username=bryan@krausen.io
 >> after the login succeeds we will see vault-token file with token stored 
 
+
 root@ctudose:~# vault auth enable azure
 Success! Enabled azure auth method at: azure/
 root@ctudose:~# vault auth disable azure
@@ -207,3 +208,22 @@ Any tokens that are created for the entity inherit the capabilities that are gra
 1. authenticate with ldap credentials
 2. validate with ldap
 3. return a vault token (token inherits capabilities granted by both policies)
+
+$ vault policy list
+$ vault write auth/userpass/users/bryan password=bryan policies=kv-policy # create new user for login
+$ vault policy read kv-policy
+$ vault policy read manager
+$ vault login -method=userpass username=bryan  # by loggin in, we can see that we have a new token and it has kv-policy assigned which allows read to certain path
+$ vault kv get kv/automation
+$ vault kv get kv/operations/admin # returns permission denied 403 with no access
+$ vault auth list # permission denied with non-root user
+$ vault login root-token
+$ vault write identity/entity name="Bryan Krausen" policies=manager
+# we will now create an entity alias, we will take our userpass user and add it as an entity alias to this new entity we just created
+$ vault write identity/entity-alias name="bryan" canonical_id="dfd" mount_accessor="g43"
+
+$ vault login -method=userpass username=bryan 
+# because this user is not an entity that we created, we also get the policy that is assigned to the entity itself
+# we have the capabilities from the kv-policy and manager policies
+$ vault kv get kv/automation
+$ vault kv get kv/operations/admin
