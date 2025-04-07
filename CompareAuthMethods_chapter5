@@ -238,3 +238,8 @@ $ vault kv get kv/operations/admin
  - token inherits capabilities granted byt alias, entity and the group
  - internal group = group created in vault to group entities to propagate identical permissions (created manually)
  - external group = groups which vault infers and creates based on group associations coming from auth methods (created manually or automatically)
+
+ - internal groups can be used to easily manage permissions for entities 
+ - frequenctly used when using vault namespaces to propagate permissions down to child namespaces (helpful when you do not want to configure auth method on every single namespace)
+ - external groups are used to set permissions based on group membership from an external identity provider, such as ldap, okta, or oidc provider
+ - allows you to set up once in vault and continue manage permissions in the identity provider (group name must match the group name in your identity provider)
