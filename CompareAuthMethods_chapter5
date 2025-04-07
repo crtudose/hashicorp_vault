@@ -308,3 +308,108 @@ token_policies          ["bryan" "default"]
 identity_policies       []
 policies                ["bryan" "default"]
 token_meta_role_name    bryan
+
+Lab approle auth method
+--------------------------
+# Enable AppRole auth if not yet enabled:
+# Log in with a valid token
+root@ctudose:~# vault login hvs.
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                hvs.
+token_accessor       YxK
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+
+# Validate that AppRole is already enabled at the approle/ path
+root@ctudose:~# vault auth list
+Path        Type        Accessor                  Description                    Version
+----        ----        --------                  -----------                    -------
+approle/    approle     auth_approle_0d1b7aa0     n/a                            n/a
+bryan/      userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
+token/      token       auth_token_9c496121       token based credentials        n/a
+
+# create approle
+root@ctudose:~# vault policy write app-policy - <<EOF
+path "secret/data/app/*" {
+  capabilities = ["read", "list"]
+}
+EOF
+Success! Uploaded policy: app-policy
+
+# Get RoleID
+root@ctudose:~# vault read auth/approle/role/my-app/role-id
+Key        Value
+---        -----
+role_id    94c81fa1-c483-8600-ae2a-d8b8e566be2d
+
+# generate secretID
+root@ctudose:~# vault write -f auth/approle/role/my-app/secret-id
+Key                   Value
+---                   -----
+secret_id             8a901288-be02-8de8-283e-3dbd0420e551
+secret_id_accessor    47576674-9b25-ed43-e547-9cfce4e4fb90
+secret_id_num_uses    0
+secret_id_ttl         0s
+
+# Write a secret to use for testing
+root@ctudose:~# vault kv put secret/app/config db_conn=prod-db.krausen.io:3306
+Success! Data written to: secret/app/config
+
+# login using approle
+root@ctudose:~# vault write auth/approle/login \
+    role_id="94c81fa1-c483-8600-ae2a-d8b8e566be2d" \
+    secret_id="8a901288-be02-8de8-283e-3dbd0420e551"
+Key                     Value
+---                     -----
+token                   hvs..
+token_accessor          cU8RhuT23qDkR2JXyoCQaNVH
+token_duration          1h
+token_renewable         true
+token_policies          ["app-policy" "default"]
+identity_policies       []
+policies                ["app-policy" "default"]
+token_meta_role_name    my-app
+
+root@ctudose:~# export VAULT_TOKEN=hvs
+root@ctudose:~# vault kv put secret/app/config api_key="test123"
+Success! Data written to: secret/app/config
+root@ctudose:~# vault kv get secret/app/config
+===== Data =====
+Key        Value
+---        -----
+api_key    test123
+root@ctudose:~# vault write auth/approle/role/restricted-app \
+    token_policies="app-policy" \
+    secret_id_ttl=30m \
+    token_num_uses=10 \
+    secret_id_num_uses=1 \
+    token_ttl=20m
+Success! Data written to: auth/approle/role/restricted-app
+root@ctudose:~# vault write -f auth/approle/role/restricted-app/secret-id
+vault write auth/approle/login \
+    role_id="94c81fa1-c483-8600-ae2a-d8b8e566be2d" \
+    secret_id="8a901288-be02-8de8-283e-3dbd0420e551"
+Key                   Value
+---                   -----
+secret_id             7796978f-efd4-428a-4fff-bedb8e3f57fc
+secret_id_accessor    4c48f3a5-5b87-6d6b-bf46-f343eee7b53b
+secret_id_num_uses    1
+secret_id_ttl         30m
+Key                     Value
+---                     -----
+token                   hvs..
+token_accessor          l3fs7JLFKLdhBNMxayAMNU1L
+token_duration          1h
+token_renewable         true
+token_policies          ["app-policy" "default"]
+identity_policies       []
+policies                ["app-policy" "default"]
+token_meta_role_name    my-app
