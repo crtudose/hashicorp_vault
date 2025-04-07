@@ -253,3 +253,4 @@ $ vault kv get kv/operations/admin
  - it's usually easy to eliminate auth methods based on the way they operate or integrate with applications 
  - frequently rotated: generally means a dynamic credential. Meet requirements (aws, ldap, aure, gcp, k8s) Does not meet requirements (userpass, tls, approle)
  - remove secrets from process or build pipeline: generally means a dynamic or integrated credential. Meets requirements (aws, azure, gcp, k8s) does not meet requirements (userpass, ldap)
+ - use existing user credentials: generally means you should integrate with an existing identity provider. Meets the requirement: (oidc, ldap, okta, github). Does not meet requirements (userpass, aws, azure, gcp)
