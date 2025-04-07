@@ -243,3 +243,11 @@ $ vault kv get kv/operations/admin
  - frequenctly used when using vault namespaces to propagate permissions down to child namespaces (helpful when you do not want to configure auth method on every single namespace)
  - external groups are used to set permissions based on group membership from an external identity provider, such as ldap, okta, or oidc provider
  - allows you to set up once in vault and continue manage permissions in the identity provider (group name must match the group name in your identity provider)
+
+# choosing an auth method
+============================
+ - certain auth methods are ideal or different use cases
+ - many auth methods may satisfy the requirements, but often there's one that works the best for a situation
+ - in contrast, just because you are using a certain platform does not mean you need to use the related auth method
+ - example: azure VMs can authenticate using the azure auth method
+ - it's usually easy to eliminate auth methods based on the way they operate or integrate with applications
