@@ -254,3 +254,57 @@ $ vault kv get kv/operations/admin
  - frequently rotated: generally means a dynamic credential. Meet requirements (aws, ldap, aure, gcp, k8s) Does not meet requirements (userpass, tls, approle)
  - remove secrets from process or build pipeline: generally means a dynamic or integrated credential. Meets requirements (aws, azure, gcp, k8s) does not meet requirements (userpass, ldap)
  - use existing user credentials: generally means you should integrate with an existing identity provider. Meets the requirement: (oidc, ldap, okta, github). Does not meet requirements (userpass, aws, azure, gcp)
+
+human vs system auth methods
+=============================
+ - **human based** with an existing identity provider
+ - requires a hands-on approach to use
+ - logging in via prompt or pop-up 
+ - often configured with the platforms integrated mfa
+
+ - *system based** auth method
+ - uses non-human friendly methodologies (not easy to remember such as tls certificate) 
+ - usually integrates with an existing platform
+ - vault validates credentials with the platform
+
+$ vault auth list
+$ vault auth enable approle
+
+root@ctudose:~# vault auth list
+Path        Type        Accessor                  Description                    Version
+----        ----        --------                  -----------                    -------
+approle/    approle     auth_approle_0d1b7aa0     n/a                            n/a
+bryan/      userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
+token/      token       auth_token_9c496121       token based credentials        n/a
+root@ctudose:~# vault write auth/approle/role/bryan policies=bryan token_ttl=20m
+Success! Data written to: auth/approle/role/bryan
+
+root@ctudose:~# vault list auth/approle/role/bryan
+No value found at auth/approle/role/bryan
+root@ctudose:~# vault list auth/approle/role
+Keys
+----
+bryan
+root@ctudose:~# vault read auth/approle/role/bryan/role-id
+Key        Value
+---        -----
+role_id    f9418df6-4dc5-1236-b53b-d0bf28b5c125
+
+root@ctudose:~# vault write -force auth/approle/role/bryan/secret-id
+Key                   Value
+---                   -----
+secret_id             60aa0b68-415c-3c3a-e0bd-193d403602d5
+secret_id_accessor    05c3ef47-c237-311e-cc13-0eb4ed8ffcfe
+secret_id_num_uses    0
+secret_id_ttl         0s
+root@ctudose:~# vault write auth/approle/login role_id=f9418df6-4dc5-1236-b53b-d0bf28b5c125 secret_id=60aa0b68-415c-3c3a-e0bd-193d403602d5
+Key                     Value
+---                     -----
+token                   hvs
+token_accessor          6rBpylfXEiQoR8bHVuGsLejT
+token_duration          20m
+token_renewable         true
+token_policies          ["bryan" "default"]
+identity_policies       []
+policies                ["bryan" "default"]
+token_meta_role_name    bryan
