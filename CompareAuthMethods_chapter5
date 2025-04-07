@@ -413,3 +413,35 @@ token_policies          ["app-policy" "default"]
 identity_policies       []
 policies                ["app-policy" "default"]
 token_meta_role_name    my-app
+
+# okta auth method
+=====================
+ - we login into okta and create an api key to be used in vault
+
+root@ctudose:~# vault auth list
+Path        Type        Accessor                  Description                    Version
+----        ----        --------                  -----------                    -------
+approle/    approle     auth_approle_0d1b7aa0     n/a                            n/a
+bryan/      userpass    auth_userpass_efd6fc45    local credentials for vault    n/a
+okta/       okta        auth_okta_2326158d        n/a                            n/a
+token/      token       auth_token_9c496121       token based credentials        n/a
+
+root@ctudose:~# vault status
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    5
+Threshold       3
+Version         1.18.3
+Build Date      2024-12-16T14:00:53Z
+Storage Type    file
+Cluster Name    vault-cluster-08459538
+Cluster ID      3b6c2a8b-d20f-0ca8-b53c-ade159be4a6a
+HA Enabled      false
+
+$ vault write auth/okta/config base_url="okta.com" org_name="krausen" api_token="23qra"
+$ vault read auth/okta/config
+root@ctudose:~# vault write auth/okta/users/bryan@krausen.io policies=bryan
+Success! Data written to: auth/okta/users/bryan@krausen.io
