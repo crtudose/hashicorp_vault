@@ -576,3 +576,150 @@ $ vault login -method=userpass \
 # Test restricted permissions
 $ vault kv put secret/user1/test value=123
 $ vault kv put secret/admin/test value=123  # Should fail
+
+Lab K8s auth method
+=====================
+Generate a mock certificate from our Kubernetes cluster
+echo "-----BEGIN CERTIFICATE-----
+MIICpjCCAY4CCQClrlkJyaahwDANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDDApr
+dWJlcm5ldGVzMB4XDTI0MTIyNzIwMzAxOFoXDTI3MTAxNzIwMzAxOFowFTETMBEG
+A1UEAwwKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AJ4KtVfU7CD+aQdqj3R5rBmAmsulosuYF4T3gRZurmXc6A93Dqukh2B0g5l9QKDJ
+0Y+FMiVbx7qKfrkGZcUizO3IH2HF29Cew1rkLIqeGz6NveyTuwtz2Qk5n+l6V1JQ
+qmA9xljpL+45RlVrJY29CgzyMUE3/yGrrhqyeInJHIQGCRYwePxh1LFycF4AC/SO
+Wad0Y6PTvUZpbGazpZY7T8EFRm9uJq079jrpexDS0oMkt9Sft/eFIi8ri8o7i/yr
+ClaPFyzkWZhDncyDfvOFUZH7Tg8zFfNfefSyUYt5Qprakqh2MpLvj4JONzxG03XO
+dHYTX4T/oPU1GpNleRKewtsCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAPEQxQAv5
+r75A7gYb64OV133G61lJIZVkDj4aQqMzpeT9sq+tCJm0OBw+GdkcQSXewq3F4mZr
+htmCDBDJBAffJYvyNLyI9nDQ7o4SURrKBVN7NY6DAAtKolwW4bJiqYEE1g5iTAhO
++EB1HWJqZCx0llGIdsc9GBFBzpXDcvqRuXrYDaVKiN7VtN+3QIz8ysJTEHBPk5Aj
+ZrRtwgfEEymwA6HX2HS0NpPiT5MORTSsLaOwEuMKNvaoULgGHQ7a5UoNcUgHNp4n
+KrdsvtMMpZWCn9ZKjrq2xYD7OJqxn989B8Y91gP4DbHUzx7KB107TgbLuZrM69aX
+61ETnWq25yXd0g==
+-----END CERTIFICATE-----" > mock-ca.crt
+Create mock JWT token
+echo "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6InRlc3Qtc2EiLCJpYXQiOjE1MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" > jwt.txt
+Enable auth method:
+# Log in with a valid token
+vault login root
+
+# Enable the Kubernetes auth method
+vault auth enable kubernetes
+Configure Kubernetes auth configuration (this is a per cluster configuration):
+# Configure Kubernetes auth
+vault write auth/kubernetes/config \
+    kubernetes_host="https://mock-k8s:8443" \
+    token_reviewer_jwt=@jwt.txt \
+    kubernetes_ca_cert=@mock-ca.crt \
+    issuer="https://kubernetes.default.svc.cluster.local"
+Create app policy:
+vault policy write my-app-policy - <<EOF
+path "secret/data/my-app/*" {
+  capabilities = ["read"]
+}
+EOF
+Create a Kubernetes auth role for our application:
+vault write auth/kubernetes/role/my-app \
+    bound_service_account_names=my-app \
+    bound_service_account_namespaces=default \
+    policies=my-app-policy \
+    ttl=1h
+Test authentication (simulated - this won't work since we don't have a real k8s cluster):
+# Simulate Kubernetes service account JWT login
+vault write auth/kubernetes/login \
+    role=my-app \
+    jwt=@jwt.txt
+
+root@ctudose:~# vault login -method=userpass username=jamie
+Password (will be hidden):
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                    Value
+---                    -----
+token                  hvs.CA
+token_accessor         UfjOqmqK24RueCzwC1VHXxli
+token_duration         768h
+token_renewable        true
+token_policies         ["bryan" "default"]
+identity_policies      []
+policies               ["bryan" "default"]
+token_meta_username    jamie
+root@ctudose:~# vault login -method=userpass username=frank
+Password (will be hidden):
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                    Value
+---                    -----
+token                  hvs.j
+token_accessor         WQY8dJ27hS2zo4QnOcP32h9Y
+token_duration         768h
+token_renewable        true
+token_policies         ["bryan" "default"]
+identity_policies      []
+policies               ["bryan" "default"]
+token_meta_username    frank
+root@ctudose:~# echo "-----BEGIN CERTIFICATE-----
+MIICpjCCAY4CCQClrlkJyaahwDANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDDApr
+dWJlcm5ldGVzMB4XDTI0MTIyNzIwMzAxOFoXDTI3MTAxNzIwMzAxOFowFTETMBEG
+A1UEAwwKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AJ4KtVfU7CD+aQdqj3R5rBmAmsulosuYF4T3gRZurmXc6A93Dqukh2B0g5l9QKDJ
+0Y+FMiVbx7qKfrkGZcUizO3IH2HF29Cew1rkLIqeGz6NveyTuwtz2Qk5n+l6V1JQ
+qmA9xljpL+45RlVrJY29CgzyMUE3/yGrrhqyeInJHIQGCRYwePxh1LFycF4AC/SO
+Wad0Y6PTvUZpbGazpZY7T8EFRm9uJq079jrpexDS0oMkt9Sft/eFIi8ri8o7i/yr
+ClaPFyzkWZhDncyDfvOFUZH7Tg8zFfNfefSyUYt5Qprakqh2MpLvj4JONzxG03XO
+dHYTX4T/oPU1GpNleRKewtsCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAPEQxQAv5
+r75A7gYb64OV133G61lJIZVkDj4aQqMzpeT9sq+tCJm0OBw+GdkcQSXewq3F4mZr
+htmCDBDJBAffJYvyNLyI9nDQ7o4SURrKBVN7NY6DAAtKolwW4bJiqYEE1g5iTAhO
++EB1HWJqZCx0llGIdsc9GBFBzpXDcvqRuXrYDaVKiN7VtN+3QIz8ysJTEHBPk5Aj
+ZrRtwgfEEymwA6HX2HS0NpPiT5MORTSsLaOwEuMKNvaoULgGHQ7a5UoNcUgHNp4n
+KrdsvtMMpZWCn9ZKjrq2xYD7OJqxn989B8Y91gP4DbHUzx7KB107TgbLuZrM69aX
+61ETnWq25yXd0g==
+-----END CERTIFICATE-----" > mock-ca.crt
+root@ctudose:~# echo "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6InRlc3Qtc2EiLCJpYXQiOjE1MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" > jwt.txt
+root@ctudose:~# vault login hvs.h
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                hvs.h
+token_accessor       YxK4nBjlPeUqblADlF25cd6V
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+root@ctudose:~# vault auth enable kubernetes
+Success! Enabled kubernetes auth method at: kubernetes/
+root@ctudose:~# vault write auth/kubernetes/config \
+    kubernetes_host="https://mock-k8s:8443" \
+    token_reviewer_jwt=@jwt.txt \
+    kubernetes_ca_cert=@mock-ca.crt \
+    issuer="https://kubernetes.default.svc.cluster.local"
+Success! Data written to: auth/kubernetes/config
+root@ctudose:~# vault policy write my-app-policy - <<EOF
+path "secret/data/my-app/*" {
+  capabilities = ["read"]
+}
+EOF
+Success! Uploaded policy: my-app-policy
+root@ctudose:~# vault write auth/kubernetes/role/my-app \
+    bound_service_account_names=my-app \
+    bound_service_account_namespaces=default \
+    policies=my-app-policy \
+    ttl=1h
+Success! Data written to: auth/kubernetes/role/my-app
+root@ctudose:~# vault write auth/kubernetes/login \
+    role=my-app \
+    jwt=@jwt.txt
+Error writing data to auth/kubernetes/login: Error making API request.
+
+URL: PUT http://127.0.0.1:8200/v1/auth/kubernetes/login
+Code: 403. Errors:
+
+* permission denied
