@@ -493,3 +493,86 @@ token_period               0s
 token_policies             [bryan]
 token_ttl                  0s
 token_type                 default
+
+root@ctudose:~# vault login -method=userpass username=jamie
+Password (will be hidden):
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                    Value
+---                    -----
+token                  hvs.C
+token_accessor         Ufj
+token_duration         768h
+token_renewable        true
+token_policies         ["bryan" "default"]
+identity_policies      []
+policies               ["bryan" "default"]
+token_meta_username    jamie
+
+root@ctudose:~# vault login -method=userpass username=frank
+Password (will be hidden):
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                    Value
+---                    -----
+token                  hvs.v
+token_accessor         WQY8dJ27hS2zo4QnOcP32h9Y
+token_duration         768h
+token_renewable        true
+token_policies         ["bryan" "default"]
+identity_policies      []
+policies               ["bryan" "default"]
+token_meta_username    frank
+
+Lab Vault authentication methods labs
+====================================
+# Enable the auth method:
+# Log in with a valid token
+$ vault login root
+
+# Enable the auth method
+$ vault auth enable userpass
+# Create users / # Create admin user
+$ vault write auth/userpass/users/admin \
+    password="admin123" \
+    policies="admin-policy"
+
+# Create regular user
+$ vault write auth/userpass/users/user1 \
+    password="user123" \
+    policies="basic-policy"
+# Create basic policies / # Create admin policy
+$ vault policy write admin-policy - <<EOF
+path "secret/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+EOF
+
+# Create basic policy
+$ vault policy write basic-policy - <<EOF
+path "secret/data/user1/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+EOF
+
+# Test authentication:
+# Login as admin
+vault login -method=userpass \
+    username=admin \
+    password=admin123
+
+# Test permissions
+$ vault kv put secret/test value=123
+
+# Login as user1
+$ vault login -method=userpass \
+    username=user1 \
+    password=user123
+
+# Test restricted permissions
+$ vault kv put secret/user1/test value=123
+$ vault kv put secret/admin/test value=123  # Should fail
